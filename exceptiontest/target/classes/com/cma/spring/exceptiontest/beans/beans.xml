@@ -10,7 +10,7 @@
 	<bean id="patient" class="com.cma.spring.exceptiontest.Patient">
 		
 	
-	<constructor-arg value="5"></constructor-arg>
-	<constructor-arg value="cm"></constructor-arg>
+	<constructor-arg value="5" name="id"></constructor-arg>
+	<constructor-arg value="cm" name="name"></constructor-arg>
 	</bean>
 </beans>
