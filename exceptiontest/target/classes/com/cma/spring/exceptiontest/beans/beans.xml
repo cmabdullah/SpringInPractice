@@ -12,6 +12,9 @@
 	
 	<constructor-arg value="5" name="id"></constructor-arg>
 	<constructor-arg value="cm" name="name"></constructor-arg>
-	<property name="nationalId" value="1234"></property>
+	<property name="nationalId" >
+	<value>12345</value>
+	
+	</property>
 	</bean>
 </beans>
