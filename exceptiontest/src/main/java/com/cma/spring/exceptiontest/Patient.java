@@ -4,6 +4,7 @@ public class Patient {
 	
 	private int id;
 	private String name;
+	private int nationalId;
 	
 		public Patient() {
 		
@@ -16,6 +17,17 @@ public class Patient {
 }
 
 	
+	
+	
+	
+	public int getNationalId() {
+		return nationalId;
+	}
+
+	public void setNationalId(int nationalId) {
+		this.nationalId = nationalId;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -41,13 +53,14 @@ public class Patient {
 
 
 
+
+
+
 	@Override
 	public String toString() {
-		return "Patient [id=" + id + ", name=" + name + "]";
+		return "Patient [id=" + id + ", name=" + name + ", nationalId="
+				+ nationalId + "]";
 	}
-
-
-
 
 	public void setName(String name) {
 		this.name = name;
