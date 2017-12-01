@@ -13,10 +13,12 @@ public class App
     {
 
     	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
-		Patient patient = (Patient)context.getBean("patient");
-    patient.speak();
+		Patient patient1 = (Patient)context.getBean("patient");
+		Patient patient2 = (Patient)context.getBean("patient");
+   // patient.speak();
    // Address address = (Address)context.getBean("address");
-		System.out.println( patient );
+		patient1.setName("Rafid");
+		System.out.println( patient2 );
 		//System.out.println( address );
     ((ClassPathXmlApplicationContext)context).close();
     }
