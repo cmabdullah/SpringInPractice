@@ -5,6 +5,7 @@ public class Patient {
 	private int id;
 	private String name;
 	private int nationalId;
+	private Address address;
 	
 		public Patient() {
 		
@@ -20,6 +21,14 @@ public class Patient {
 	
 	
 	
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
 	public int getNationalId() {
 		return nationalId;
 	}
@@ -56,10 +65,11 @@ public class Patient {
 
 
 
+
 	@Override
 	public String toString() {
 		return "Patient [id=" + id + ", name=" + name + ", nationalId="
-				+ nationalId + "]";
+				+ nationalId + ", address=" + address + "]";
 	}
 
 	public void setName(String name) {

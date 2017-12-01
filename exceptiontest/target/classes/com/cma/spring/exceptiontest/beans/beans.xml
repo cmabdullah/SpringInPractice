@@ -3,18 +3,20 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-
-	
-	
-	
 	<bean id="patient" class="com.cma.spring.exceptiontest.Patient">
-		
-	
-	<constructor-arg value="5" name="id"></constructor-arg>
-	<constructor-arg value="cm" name="name"></constructor-arg>
-	<property name="nationalId" >
-	<value>12345</value>
-	
-	</property>
+
+
+		<constructor-arg value="5" name="id"></constructor-arg>
+		<constructor-arg value="cm" name="name"></constructor-arg>
+		<property name="nationalId">
+			<value>12345</value>
+
+		</property>
+		<property name="address" ref="address"></property>
+	</bean>
+
+	<bean id="address" class="com.cma.spring.exceptiontest.Address">
+		<constructor-arg name="street" value="Rampura"></constructor-arg>
+		<constructor-arg name="postcode" value="1219"></constructor-arg>
 	</bean>
 </beans>
