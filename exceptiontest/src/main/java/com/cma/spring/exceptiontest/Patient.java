@@ -10,6 +10,13 @@ public class Patient {
 		public Patient() {
 		
 	}
+		
+	public void onCreate(){
+		System.out.println("Patient created: "+this);
+	}
+	public void onDesteoy(){
+		System.out.println("Patient destroyed ");
+	}
 	
 	public Patient(int id, String name) {
 	//super();

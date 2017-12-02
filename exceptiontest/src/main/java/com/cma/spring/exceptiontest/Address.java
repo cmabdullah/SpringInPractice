@@ -9,6 +9,13 @@ public class Address {
 		
 	}
 	
+	public void init(){
+		System.out.println("Address Created :"+this);
+	}
+	public void destroy(){
+		System.out.println("Address Destroyed");
+	}
+	
 	
 	public Address(String street, String postcode) {
 		this.street = street;
