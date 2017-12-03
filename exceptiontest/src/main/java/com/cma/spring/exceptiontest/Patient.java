@@ -10,6 +10,12 @@ public class Patient {
 		public Patient() {
 		
 	}
+	
+	public static Patient getInstance(int id, String name){
+		System.out.println("Creating patient using factory method :");
+		
+		return new Patient(id,name);
+	}
 		
 	public void onCreate(){
 		System.out.println("Patient created: "+this);

@@ -5,7 +5,8 @@
 	default-init-method="init" default-destroy-method="destroy">
 
 	<bean id="patient" class="com.cma.spring.exceptiontest.Patient"
-		scope="singleton" init-method="onCreate" destroy-method="onDesteoy">
+		scope="singleton" init-method="onCreate" destroy-method="onDesteoy"
+		factory-method="getInstance">
 
 
 		<constructor-arg value="5" name="id"></constructor-arg>
