@@ -18,8 +18,28 @@
 		<property name="address" ref="address"></property>
 	</bean>
 
+
+
+	<bean id="patient2" class="com.cma.spring.exceptiontest.Patient"
+		scope="singleton" init-method="onCreate" destroy-method="onDesteoy"
+		factory-method="createPatient" factory-bean="patientfactory">
+
+
+		<constructor-arg value="5" name="id"></constructor-arg>
+		<constructor-arg value="Rafid" name="name"></constructor-arg>
+		<property name="nationalId">
+			<value>12345</value>
+
+		</property>
+		<property name="address" ref="address"></property>
+	</bean>
+
+
 	<bean id="address" class="com.cma.spring.exceptiontest.Address">
 		<constructor-arg name="street" value="Rampura"></constructor-arg>
 		<constructor-arg name="postcode" value="1219"></constructor-arg>
+	</bean>
+	<bean class="com.cma.spring.exceptiontest.PatientFactory"
+		id="patientfactory">
 	</bean>
 </beans>
