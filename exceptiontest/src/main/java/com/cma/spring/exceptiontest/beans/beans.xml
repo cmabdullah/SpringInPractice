@@ -3,37 +3,27 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	default-init-method="init" default-destroy-method="destroy"
 	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="patient" class="com.cma.spring.exceptiontest.Patient"
 		scope="singleton" init-method="onCreate" destroy-method="onDesteoy"
-		factory-method="getInstance">
+		factory-method="getInstance" p:address-ref="address"
+		c:_0="6" 
+		c:_1="Herry"
+		
+		>
 
 
-		<constructor-arg value="5" name="id"></constructor-arg>
-		<constructor-arg value="cm" name="name"></constructor-arg>
 		<property name="nationalId">
 			<value>12345</value>
 
 		</property>
-		<property name="address" ref="address"></property>
 	</bean>
 
 
 
-	<bean id="patient2" class="com.cma.spring.exceptiontest.Patient"
-		scope="singleton" init-method="onCreate" destroy-method="onDesteoy"
-		factory-method="createPatient" factory-bean="patientfactory">
 
-
-		<constructor-arg value="5" name="id"></constructor-arg>
-		<constructor-arg value="Rafid" name="name"></constructor-arg>
-		<property name="nationalId">
-			<value>12345</value>
-
-		</property>
-		<property name="address" ref="address"></property>
-	</bean>
 
 
 	<bean id="address" class="com.cma.spring.exceptiontest.Address">
