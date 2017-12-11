@@ -1,21 +1,24 @@
 package com.cma.spring.exceptiontest;
 
+import java.util.List;
+
 public class Patient {
 	
 	private int id;
 	private String name;
-	private int nationalId;
-	private Address address;
+	//private int nationalId;
+	//private Address address;
+	private List<String> emargencyContactNumber;
 	
 		public Patient() {
 		
 	}
 	
-	public static Patient getInstance(int id, String name){
-		System.out.println("Creating patient using factory method :");
-		
-		return new Patient(id,name);
-	}
+//	public static Patient getInstance(int id, String name){
+//		System.out.println("Creating patient using factory method :");
+//		
+//		return new Patient(id,name);
+//	}
 		
 	public void onCreate(){
 		System.out.println("Patient created: "+this);
@@ -32,7 +35,7 @@ public class Patient {
 
 	
 	
-	
+	/***
 	
 	public Address getAddress() {
 		return address;
@@ -49,7 +52,7 @@ public class Patient {
 	public void setNationalId(int nationalId) {
 		this.nationalId = nationalId;
 	}
-
+***/
 	public int getId() {
 		return id;
 	}
@@ -79,18 +82,25 @@ public class Patient {
 
 
 
-	@Override
-	public String toString() {
-		return "Patient [id=" + id + ", name=" + name + ", nationalId="
-				+ nationalId + ", address=" + address + "]";
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
 
 
 
+
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", name=" + name + "]";
+	}
+
+	public List<String> getEmargencyContactNumber() {
+		return emargencyContactNumber;
+	}
+
+	public void setEmargencyContactNumber(List<String> emargencyContactNumber) {
+		this.emargencyContactNumber = emargencyContactNumber;
+	}
 
 	public void speak(){
 		System.out.println("Help me");

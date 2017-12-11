@@ -1,4 +1,4 @@
-package com.cma.spring.exceptiontest;
+/***package com.cma.spring.exceptiontest;
 
 public class Address {
 	private String street;
@@ -41,3 +41,4 @@ public class Address {
 	
 	
 }
+***/

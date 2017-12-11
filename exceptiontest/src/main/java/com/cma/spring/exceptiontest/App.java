@@ -18,10 +18,13 @@ public class App
    // patient.speak();
    // Address address = (Address)context.getBean("address");
 		//patient1.setName("Rafid");
-		Address address2 = (Address)context.getBean("address2");
+		//Address address2 = (Address)context.getBean("address2");
 		System.out.println( patient );
-		System.out.println( address2 );
+		//System.out.println( address2 );
 		//System.out.println( address );
+		for (String name:patient.getEmargencyContactNumber()){
+			System.out.println(name);
+		}
     ((ClassPathXmlApplicationContext)context).close();
     }
 }
