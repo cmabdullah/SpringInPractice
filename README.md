@@ -94,7 +94,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class App {
     public static void main( String[] args ) {
-		//beans.xml is available on applications root path
     	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");//load beans.xml through Spring ApplicationContext
 		Patient patient = (Patient)context.getBean("patient");// return object thats why cust Patient type
    		 patient.speak();
@@ -142,7 +141,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class App {
     public static void main( String[] args ) {
-		//beans.xml is available on applications root path
     	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");//load beans.xml through Spring ApplicationContext
 		Patient patient = (Patient)context.getBean("patient");// return object thats why cust Patient type
 		System.out.println( patient );
@@ -203,6 +201,91 @@ public class Patient {
 	class="com.cma.spring.exceptiontest.Patient">
 	<constructor-arg value="5" name="id"></constructor-arg><!-- Add constructor arguments -->
 	<constructor-arg value="cm" name="name"></constructor-arg>
+	</bean>
+</beans>
+```
+
+# Lacture 7
+## Objective : How Define Beans Property
+
+### App.java
+ ```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class App {
+    public static void main( String[] args ) {
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");//load beans.xml through Spring ApplicationContext
+		Patient patient = (Patient)context.getBean("patient");// return object thats why cust Patient type
+		System.out.println( patient );
+   		patient.speak();
+    ((ClassPathXmlApplicationContext)context).close();// close ClassPathXmlApplicationContext
+    }
+}
+```
+
+
+### Patient.java
+```java
+package com.cma.spring.exceptiontest;
+import java.util.List;
+public class Patient {
+	private int id;
+	private String name;
+	private int nationalId;
+	public Patient() {//empty constructor	
+	}
+	public int getNationalId() {
+		return nationalId;
+	}
+	public void setNationalId(int nationalId) {
+		this.nationalId = nationalId;
+	}
+	public Patient(int id, String name) {
+	this.id = id;
+	this.name = name;
+	}
+	public int getId() {//beans access attributs through getters and setters
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", name=" + name + ", nationalId="+ nationalId + "]";
+	}
+	public void speak(){
+		System.out.println("Help me");
+	}
+}
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	default-init-method="init" default-destroy-method="destroy"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="patient" 
+	class="com.cma.spring.exceptiontest.Patient">
+	<constructor-arg value="5" name="id"></constructor-arg><!-- Add constructor arguments -->
+	<constructor-arg value="cm" name="name"></constructor-arg>
+	<property name="nationalId" value="1234"></property><!--property added that execute without constructor-->
+	<!-- same code, just different image
+	<property name="nationalId">
+	 <value>1234</value>
+	</property>
+	-->
 	</bean>
 </beans>
 ```
