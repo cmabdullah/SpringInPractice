@@ -39,6 +39,8 @@ command+shift+r = open resource
 
 command+space = full line
 
+command+shift+f = rearrange
+
 # Lacture 4
 ## Objective : Define patient class beans
 ### App.java
@@ -232,7 +234,7 @@ import java.util.List;
 public class Patient {
 	private int id;
 	private String name;
-	private int nationalId;
+	private int nationalId;//initialize an attribute without constructor, through parameter @cm
 	public Patient() {//empty constructor	
 	}
 	public int getNationalId() {
@@ -287,5 +289,141 @@ public class Patient {
 	</property>
 	-->
 	</bean>
+</beans>
+```
+
+# Lacture 8
+## Objective : How perform dependency injection through Spring
+## What is dependency injection
+#### if any object1 is dependent on another object2, that time object2 make an instance through Spring and initialize on object1
+##### How we inject Address class into Patient class?
+
+### App.java
+ ```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class App {
+    public static void main( String[] args ) {
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");//load beans.xml through Spring ApplicationContext
+		Patient patient = (Patient)context.getBean("patient");// return object thats why cust Patient type
+		System.out.println( patient ); 
+   		patient.speak();
+    ((ClassPathXmlApplicationContext)context).close();// close ClassPathXmlApplicationContext
+    }
+}
+```
+
+### Patient.java
+```java
+package com.cma.spring.exceptiontest;
+import java.util.List;
+public class Patient {
+	private int id;
+	private String name;
+	private int nationalId;//initialize an attribute without constructor, through parameter @cm
+		private Address address; // it is a dependency of Patient class
+	public Patient() {//empty constructor	
+	}
+	public int getNationalId() {
+		return nationalId;
+	}
+	public void setNationalId(int nationalId) {
+		this.nationalId = nationalId;
+	}
+	public Patient(int id, String name) {
+	this.id = id;
+	this.name = name;
+	}
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	public int getId() {//beans access attributs through getters and setters
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", name=" + name + ", nationalId="+ nationalId + ", address=" + address + "]";
+
+	}
+	public void speak(){
+		System.out.println("Help me");
+	}
+}
+```
+
+
+
+### Address.java
+```java
+package com.cma.spring.exceptiontest;
+public class Address {
+	private String street;
+	private String postcode;
+	public Address(){
+	}
+	
+	public Address(String street, String postcode) {
+		this.street = street;
+		this.postcode = postcode;
+	}
+	public String getStreet() {
+		return street;
+	}
+	public void setStreet(String street) {
+		this.street = street;
+	}
+	public String getPostcode() {
+		return postcode;
+	}
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+	@Override
+	public String toString() {
+		return "Address [street=" + street + ", postcode=" + postcode + "]";
+	}
+}
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	default-init-method="init" default-destroy-method="destroy"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="patient" 
+	class="com.cma.spring.exceptiontest.Patient">
+	<constructor-arg value="5" name="id"></constructor-arg><!-- Add constructor arguments -->
+	<constructor-arg value="cm" name="name"></constructor-arg>
+	<property name="nationalId" value="1234"></property>
+
+	<property name="address" ref="address"></property><!--property name of Patient class is address, and reference is "bean id="address" ..." -->
+
+	</bean>
+	<bean id="address" 
+	class="com.cma.spring.exceptiontest.Address>
+	<!--we have to initialize some variable using constructor-->
+	<constructor-arg value="street" name="rampura road 5"></constructor-arg><!-- Add constructor arguments -->
+	<constructor-arg value="postcode" name="1219"></constructor-arg>
+	</bean>
+
 </beans>
 ```
