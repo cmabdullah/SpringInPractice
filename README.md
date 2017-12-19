@@ -1202,3 +1202,46 @@ public class Address {
 </beans>
 ```
 
+
+
+
+we will see how to use reference beans through p-namespace
+p-namespace use for properyies
+c-namespace use for constructor arguments
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	default-init-method="init" default-destroy-method="destroy"
+	xmlns:p="http://www.springframework.org/schema/p" 
+
+	xmlns:c="http://www.springframework.org/schema/c"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	default-init-method="init" default-destroy-method="destroy"><!--define globally-->
+
+	<bean id="patient" 
+	class="com.cma.spring.exceptiontest.Patient"
+	scope="singleton" init-method="onCreate" destroy-method="onDesteoy"
+	factory-method="getInstance" p:address-ref="address"
+		c:_0="6" 
+		c:_1="Herry" ><!--use reference address beans through p-namespace-->
+		<!--argument index-->
+
+	<property name="nationalId" value="1234"></property>
+	</bean>
+
+	<bean id="address" 
+	class="com.cma.spring.exceptiontest.Address">
+	<constructor-arg name="street" value="rampura road 5"></constructor-arg>
+	<constructor-arg name="postcode" value="1219"></constructor-arg>
+	</bean>
+	<bean id="address2" 
+	class="com.cma.spring.exceptiontest.Address" p:street="road no 5" p:postcode="1219">
+	</bean>
+
+</beans>
+```
