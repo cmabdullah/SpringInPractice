@@ -1205,9 +1205,125 @@ public class Address {
 
 
 
-we will see how to use reference beans through p-namespace
-p-namespace use for properyies
-c-namespace use for constructor arguments
+# Lacture 13
+## Objective : Define properties using c-namespace.
+##### we will see how to use reference beans through p-namespace
+##### p-namespace use for properyies
+##### c-namespace use for constructor arguments
+
+
+### App.java
+ ```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class App {
+    public static void main( String[] args ) {
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+		Patient patient = (Patient)context.getBean("patient");
+		Address address2 = (Address)context.getBean("address2");
+		System.out.println( patient );
+		System.out.println( address2 );
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+```
+
+### Patient.java
+```java
+package com.cma.spring.exceptiontest;
+import java.util.List;
+public class Patient {
+	private int id;
+	private String name;
+	private int nationalId;
+		private Address address;
+	public Patient() {	
+	}
+	// getInstance method returns a patient object instance
+	public static Patient getInstance(int id, String name){// pass constructor arguments through beans
+		System.out.println("Creating patient using factory method :");	
+		return new Patient(id,name);
+	}
+	public void onCreate(){
+		System.out.println("Patient created: "+this);
+	}
+	public void onDesteoy(){
+		System.out.println("Patient destroyed ");
+	}
+	public int getNationalId() {
+		return nationalId;
+	}
+	public void setNationalId(int nationalId) {
+		this.nationalId = nationalId;
+	}
+	public Patient(int id, String name) {
+	this.id = id;
+	this.name = name;
+	}
+	public Address getAddress() {
+		return address;
+	}
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", name=" + name + ", nationalId="+ nationalId + ", address=" + address + "]";
+	}
+}
+```
+
+### Address.java
+```java
+package com.cma.spring.exceptiontest;
+public class Address {
+	private String street;
+	private String postcode;
+	public Address(){
+	}
+	public void init(){
+		System.out.println("Address Created :"+this);
+	}
+	public void destroy(){
+		System.out.println("Address Destroyed");
+	}
+	public Address(String street, String postcode) {
+		this.street = street;
+		this.postcode = postcode;
+	}
+	public String getStreet() {
+		return street;
+	}
+	public void setStreet(String street) {
+		this.street = street;
+	}
+	public String getPostcode() {
+		return postcode;
+	}
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+	@Override
+	public String toString() {
+		return "Address [street=" + street + ", postcode=" + postcode + "]";
+	}
+}
+```
+
+
 
 ### beans.xml
 
@@ -1243,5 +1359,114 @@ c-namespace use for constructor arguments
 	class="com.cma.spring.exceptiontest.Address" p:street="road no 5" p:postcode="1219">
 	</bean>
 
+</beans>
+```
+
+
+# Lacture 14
+## Objective : how initialize list through beans.xml
+##### List is the property of collection class object
+
+* set and List re pretty fine
+* set elements never returns
+
+
+### App.java
+ ```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class App {
+    public static void main( String[] args ){
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+		Patient patient = (Patient)context.getBean("patient");
+		System.out.println( patient );
+		for (String name:patient.getEmargencyContactNumber()){
+			System.out.println(name);
+		}
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+```
+
+
+### Patient.java
+
+```java
+package com.cma.spring.exceptiontest;
+import java.util.List;
+
+public class Patient {	
+
+	private int id;
+	private String name;
+	private List<String> emargencyContactNumber;
+
+	public Patient() {		
+	}
+
+	public void onCreate(){
+		System.out.println("Patient created: "+this);
+	}
+	public void onDesteoy(){
+		System.out.println("Patient destroyed ");
+	}
+	public Patient(int id, String name) {
+	this.id = id;
+	this.name = name;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", name=" + name + "]";
+	}
+	public List<String> getEmargencyContactNumber() {
+		return emargencyContactNumber;
+	}
+	public void setEmargencyContactNumber(List<String> emargencyContactNumber) {
+		this.emargencyContactNumber = emargencyContactNumber;
+	}
+	public void speak(){
+		System.out.println("Help me");
+	}
+}
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	default-init-method="init" default-destroy-method="destroy"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="patient" class="com.cma.spring.exceptiontest.Patient"
+		scope="singleton" init-method="onCreate" destroy-method="onDesteoy"
+		c:_0="6" c:_1="Herry">
+
+	<property name="emargencyContactNumber">
+		<list><!--property list-->
+			<value>name 1</value>
+			<value>name 2</value>
+			<value>name 3</value>
+			<value>name 4</value>
+			<value>name 5</value>
+			<value>name 1</value>
+		</list>
+	</property>
+	</bean>
 </beans>
 ```
