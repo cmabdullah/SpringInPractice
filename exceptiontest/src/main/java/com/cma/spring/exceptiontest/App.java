@@ -10,7 +10,7 @@ public class App
     	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
 		Patient patient = (Patient)context.getBean("patient");
 
-
+			System.out.println(patient);
 		for (EmargencyContact name:patient.getEmargencyContacts()){
 			System.out.println(name);
 		}

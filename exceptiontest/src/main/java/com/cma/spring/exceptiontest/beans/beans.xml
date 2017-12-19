@@ -6,14 +6,30 @@
 	<bean id="patient" class="com.cma.spring.exceptiontest.Patient">
 	<property name="emargencyContacts">
 		<list>
+		
+	<bean
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Abid Khan"></property>
+	<property name="phoneNumber" value="01717243358"></property>
+	</bean>	<!-- inner beans -->	
+		
+		
 			<ref bean="contact1" />
 			<ref bean="contact2" />
 			<ref bean="contact3" />
 			<ref bean="contact4" />
 		</list>
 	</property>
-	</bean>
+	<property name="criticalContact">
+		<bean
+			class="com.cma.spring.exceptiontest.EmargencyContact">
+		<property name="name" value="C M "></property>
+		<property name="phoneNumber" value="01717666666"></property>
+		</bean>	<!-- inner beans -->	
 	
+	</property>
+	</bean>
+
 	<bean id="contact1"
 		class="com.cma.spring.exceptiontest.EmargencyContact">
 	<property name="name" value="Abdullah"></property>
