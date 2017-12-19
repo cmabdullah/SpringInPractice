@@ -1397,14 +1397,11 @@ package com.cma.spring.exceptiontest;
 import java.util.List;
 
 public class Patient {	
-
 	private int id;
 	private String name;
 	private List<String> emargencyContactNumber;
-
 	public Patient() {		
 	}
-
 	public void onCreate(){
 		System.out.println("Patient created: "+this);
 	}
@@ -1469,4 +1466,143 @@ public class Patient {
 	</property>
 	</bean>
 </beans>
+```
+
+
+
+# Lacture 15
+## Objective : Setting List of beans 
+##### How use referrence beans
+
+
+### App.java
+ ```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class App {
+    public static void main( String[] args ) {
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+		Patient patient = (Patient)context.getBean("patient");
+		for (EmargencyContact name:patient.getEmargencyContacts()){
+			System.out.println(name);
+		}
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+
+```
+
+### EmargencyContact.java
+
+```java
+package com.cma.spring.exceptiontest;
+public class EmargencyContact {
+	private String name;
+	private String phoneNumber;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	@Override
+	public String toString() {
+		return "EmargencyContact [name=" + name + ", phoneNumber="
+				+ phoneNumber + "]";
+	}
+}
+```
+
+
+### Patient.java
+
+```java
+package com.cma.spring.exceptiontest;
+import java.util.List;
+public class Patient {
+	private int id;
+	private String name;
+	private List<EmargencyContact> emargencyContacts;// EmargencyContact type where object = emargencyContacts
+	public Patient() {
+		
+	}
+	public Patient(int id, String name) {
+	this.id = id;
+	this.name = name;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public List<EmargencyContact> getEmargencyContacts() {
+		return emargencyContacts;
+	}
+	public void setEmargencyContacts(List<EmargencyContact> emargencyContacts) {
+		this.emargencyContacts = emargencyContacts;
+	}
+}
+
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="patient" class="com.cma.spring.exceptiontest.Patient">
+	<property name="emargencyContacts">
+		<list>
+			<ref bean="contact1" /><!--take referrence-->
+			<ref bean="contact2" />
+			<ref bean="contact3" />
+			<ref bean="contact4" />
+		</list>
+	</property>
+	</bean>
+	
+
+	<!--new bean-->
+	<bean id="contact1"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Abdullah"></property>
+	<property name="phoneNumber" value="01717243358"></property>
+	</bean>
+	
+	<bean id="contact2"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Abida"></property>
+	<property name="phoneNumber" value="01717243359"></property>
+	</bean>	
+	
+	<bean id="contact3"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Rafid"></property>
+	<property name="phoneNumber" value="01717243367"></property>
+	</bean>	
+	
+	<bean id="contact4"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Khalid"></property>
+	<property name="phoneNumber" value="01717243387"></property>
+	</bean>	
+</beans>
+
 ```

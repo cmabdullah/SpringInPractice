@@ -6,18 +6,14 @@ public class Patient {
 	
 	private int id;
 	private String name;
-	private List<String> emargencyContactNumber;
+	
+	private List<EmargencyContact> emargencyContacts;
 	
 	public Patient() {
 		
 	}
 		
-	public void onCreate(){
-		System.out.println("Patient created: "+this);
-	}
-	public void onDesteoy(){
-		System.out.println("Patient destroyed ");
-	}
+
 	public Patient(int id, String name) {
 	this.id = id;
 	this.name = name;
@@ -34,18 +30,16 @@ public class Patient {
 	public void setName(String name) {
 		this.name = name;
 	}
-	@Override
-	public String toString() {
-		return "Patient [id=" + id + ", name=" + name + "]";
-	}
-	public List<String> getEmargencyContactNumber() {
-		return emargencyContactNumber;
-	}
-	public void setEmargencyContactNumber(List<String> emargencyContactNumber) {
-		this.emargencyContactNumber = emargencyContactNumber;
+
+
+	public List<EmargencyContact> getEmargencyContacts() {
+		return emargencyContacts;
 	}
 
-	public void speak(){
-		System.out.println("Help me");
+
+	public void setEmargencyContacts(List<EmargencyContact> emargencyContacts) {
+		this.emargencyContacts = emargencyContacts;
 	}
+
+
 }

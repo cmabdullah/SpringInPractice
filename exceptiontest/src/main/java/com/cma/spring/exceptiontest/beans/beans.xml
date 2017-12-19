@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	default-init-method="init" default-destroy-method="destroy"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:c="http://www.springframework.org/schema/c"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="patient" class="com.cma.spring.exceptiontest.Patient"
-		scope="singleton" init-method="onCreate" destroy-method="onDesteoy"
-		c:_0="6" c:_1="Herry">
-
-
-	<property name="emargencyContactNumber">
+	<bean id="patient" class="com.cma.spring.exceptiontest.Patient">
+	<property name="emargencyContacts">
 		<list>
-			<value>name 1</value>
-			<value>name 2</value>
-			<value>name 3</value>
-			<value>name 4</value>
-			<value>name 5</value>
-			<value>name 1</value>
+			<ref bean="contact1" />
+			<ref bean="contact2" />
+			<ref bean="contact3" />
+			<ref bean="contact4" />
 		</list>
 	</property>
 	</bean>
-
-
-
-
-
+	
+	<bean id="contact1"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Abdullah"></property>
+	<property name="phoneNumber" value="01717243358"></property>
+	</bean>
+	
+	<bean id="contact2"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Abida"></property>
+	<property name="phoneNumber" value="01717243359"></property>
+	</bean>	
+	
+	<bean id="contact3"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Rafid"></property>
+	<property name="phoneNumber" value="01717243367"></property>
+	</bean>	
+	
+	<bean id="contact4"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Khalid"></property>
+	<property name="phoneNumber" value="01717243387"></property>
+	</bean>	
 </beans>
