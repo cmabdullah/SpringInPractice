@@ -1607,117 +1607,6 @@ public class Patient {
 
 ```
 
-
-
-
-
-# Lacture 14
-## Objective : how initialize list through beans.xml
-##### List is the property of collection class object
-
-* set and List re pretty fine
-* set elements never returns
-
-
-### App.java
- ```java
-package com.cma.spring.exceptiontest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-public class App {
-    public static void main( String[] args ){
-    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
-		Patient patient = (Patient)context.getBean("patient");
-		System.out.println( patient );
-		for (String name:patient.getEmargencyContactNumber()){
-			System.out.println(name);
-		}
-    ((ClassPathXmlApplicationContext)context).close();
-    }
-}
-```
-
-
-### Patient.java
-
-```java
-package com.cma.spring.exceptiontest;
-import java.util.List;
-
-public class Patient {	
-	private int id;
-	private String name;
-	private List<String> emargencyContactNumber;
-	public Patient() {		
-	}
-	public void onCreate(){
-		System.out.println("Patient created: "+this);
-	}
-	public void onDesteoy(){
-		System.out.println("Patient destroyed ");
-	}
-	public Patient(int id, String name) {
-	this.id = id;
-	this.name = name;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	@Override
-	public String toString() {
-		return "Patient [id=" + id + ", name=" + name + "]";
-	}
-	public List<String> getEmargencyContactNumber() {
-		return emargencyContactNumber;
-	}
-	public void setEmargencyContactNumber(List<String> emargencyContactNumber) {
-		this.emargencyContactNumber = emargencyContactNumber;
-	}
-	public void speak(){
-		System.out.println("Help me");
-	}
-}
-```
-
-### beans.xml
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	default-init-method="init" default-destroy-method="destroy"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:c="http://www.springframework.org/schema/c"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="patient" class="com.cma.spring.exceptiontest.Patient"
-		scope="singleton" init-method="onCreate" destroy-method="onDesteoy"
-		c:_0="6" c:_1="Herry">
-
-	<property name="emargencyContactNumber">
-		<list><!--property list-->
-			<value>name 1</value>
-			<value>name 2</value>
-			<value>name 3</value>
-			<value>name 4</value>
-			<value>name 5</value>
-			<value>name 1</value>
-		</list>
-	</property>
-	</bean>
-</beans>
-```
-
-
-
 # Lacture 16
 ## Objective : Inner Beans
 
@@ -1872,5 +1761,224 @@ public class Patient {
 	<property name="name" value="Khalid"></property>
 	<property name="phoneNumber" value="01717243387"></property>
 	</bean>	
+</beans>
+```
+
+
+
+# Lacture 17
+## Objective : Setting Maps 
+
+### App.java
+
+ ```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class App {
+    public static void main( String[] args ){
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+    	ContactBook contacts = (ContactBook)context.getBean("contactbook");
+			System.out.println(contacts);
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+
+```
+
+
+### ContactBook.java
+
+```java
+package com.cma.spring.exceptiontest;
+import java.util.HashMap;
+import java.util.Map;
+public class ContactBook {
+	private Map<String , EmargencyContact> contacts = new HashMap <String, EmargencyContact>();
+	public Map<String, EmargencyContact> getContacts() {
+		return contacts;
+	}
+	public void setContacts(Map<String, EmargencyContact> contacts) {
+		this.contacts = contacts;
+	}
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Map.Entry<String, EmargencyContact> contacts : contacts.entrySet() ){
+			sb.append(contacts.toString()+"\n");
+		}
+		return sb.toString();
+	}
+}
+```
+
+### ContactBook.java
+
+```java
+package com.cma.spring.exceptiontest;
+import java.util.HashMap;
+import java.util.Map;
+public class ContactBook {
+	private Map<String , EmargencyContact> contacts = new HashMap <String, EmargencyContact>();
+	public Map<String, EmargencyContact> getContacts() {
+		return contacts;
+	}
+	public void setContacts(Map<String, EmargencyContact> contacts) {
+		this.contacts = contacts;
+	}
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Map.Entry<String, EmargencyContact> contacts : contacts.entrySet() ){
+			sb.append(contacts.toString()+"\n");
+		}
+		return sb.toString();
+	}
+}
+
+```
+
+### EmargencyContact.java
+
+```java
+package com.cma.spring.exceptiontest;
+public class EmargencyContact {
+	private String name;
+	private String phoneNumber;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	@Override
+	public String toString() {
+		return "EmargencyContact [name=" + name + ", phoneNumber="
+				+ phoneNumber + "]";
+	}
+}
+```
+
+
+### Patient.java
+
+```java
+package com.cma.spring.exceptiontest;
+import java.util.List;
+public class Patient {
+	private int id;
+	private String name;
+	private EmargencyContact criticalContact;
+	private List<EmargencyContact> emargencyContacts;
+	public Patient() {	
+	}
+	public Patient(int id, String name) {
+	this.id = id;
+	this.name = name;
+	}
+	public EmargencyContact getCriticalContact() {
+		return criticalContact;
+	}
+	public void setCriticalContact(EmargencyContact criticalContact) {
+		this.criticalContact = criticalContact;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", name=" + name + ", criticalContact="
+				+ criticalContact + "]";
+	}
+	public List<EmargencyContact> getEmargencyContacts() {
+		return emargencyContacts;
+	}
+	public void setEmargencyContacts(List<EmargencyContact> emargencyContacts) {
+		this.emargencyContacts = emargencyContacts;
+	}
+}
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="patient" class="com.cma.spring.exceptiontest.Patient">
+	<property name="emargencyContacts">
+		<list>
+		<bean
+			class="com.cma.spring.exceptiontest.EmargencyContact">
+		<property name="name" value="Abid Khan"></property>
+		<property name="phoneNumber" value="01717243358"></property>
+		</bean>	<!-- inner beans -->	
+				<ref bean="contact1" />
+				<ref bean="contact2" />
+				<ref bean="contact3" />
+				<ref bean="contact4" />
+		</list>
+	</property>
+	<property name="criticalContact">
+		<bean
+			class="com.cma.spring.exceptiontest.EmargencyContact">
+		<property name="name" value="C M "></property>
+		<property name="phoneNumber" value="01717666666"></property>
+		</bean>	<!-- inner beans -->	
+	
+	</property>
+	</bean>
+
+	<bean id="contact1"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Abdullah"></property>
+	<property name="phoneNumber" value="01717243358"></property>
+	</bean>
+	<bean id="contact2"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Abida"></property>
+	<property name="phoneNumber" value="01717243359"></property>
+	</bean>	
+	<bean id="contact3"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Rafid"></property>
+	<property name="phoneNumber" value="01717243367"></property>
+	</bean>	
+	<bean id="contact4"
+		class="com.cma.spring.exceptiontest.EmargencyContact">
+	<property name="name" value="Khalid"></property>
+	<property name="phoneNumber" value="01717243387"></property>
+	</bean>	
+	
+
+	<!--Map with value-ref-->
+	<bean id="contactbook"
+		class="com.cma.spring.exceptiontest.ContactBook">
+	<property name="contacts">
+		<map>
+			<entry key="first" value-ref="contact1"></entry>
+			<entry key="second" value-ref="contact2"></entry>
+			<entry key="third" value-ref="contact3"></entry>
+			<entry key="forth" value-ref="contact4"></entry>
+		</map>
+	</property>
+	</bean>
 </beans>
 ```

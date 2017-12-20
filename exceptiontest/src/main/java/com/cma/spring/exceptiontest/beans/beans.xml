@@ -35,22 +35,32 @@
 	<property name="name" value="Abdullah"></property>
 	<property name="phoneNumber" value="01717243358"></property>
 	</bean>
-	
 	<bean id="contact2"
 		class="com.cma.spring.exceptiontest.EmargencyContact">
 	<property name="name" value="Abida"></property>
 	<property name="phoneNumber" value="01717243359"></property>
 	</bean>	
-	
 	<bean id="contact3"
 		class="com.cma.spring.exceptiontest.EmargencyContact">
 	<property name="name" value="Rafid"></property>
 	<property name="phoneNumber" value="01717243367"></property>
 	</bean>	
-	
 	<bean id="contact4"
 		class="com.cma.spring.exceptiontest.EmargencyContact">
 	<property name="name" value="Khalid"></property>
 	<property name="phoneNumber" value="01717243387"></property>
 	</bean>	
+	
+	<bean id="contactbook"
+		class="com.cma.spring.exceptiontest.ContactBook">
+	<property name="contacts">
+		<map>
+			<entry key="first" value-ref="contact1"></entry>
+			<entry key="second" value-ref="contact2"></entry>
+			
+			<entry key="third" value-ref="contact3"></entry>
+			<entry key="forth" value-ref="contact4"></entry>
+		</map>
+	</property>
+	</bean>
 </beans>
