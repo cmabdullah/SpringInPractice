@@ -1930,7 +1930,7 @@ public class Patient {
 		<property name="name" value="Abid Khan"></property>
 		<property name="phoneNumber" value="01717243358"></property>
 		</bean>	<!-- inner beans -->	
-				<ref bean="contact1" />
+				<ref bean="contact1" /><!--bean reference-->
 				<ref bean="contact2" />
 				<ref bean="contact3" />
 				<ref bean="contact4" />
