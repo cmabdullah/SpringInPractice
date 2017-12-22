@@ -1,15 +1,15 @@
 package com.cma.spring.exceptiontest;
 
 public class Logger {
-	private ConsoleWriter consoleWriter;
-	private FileWriter fileWriter;
-	public ConsoleWriter getConsoleWriter() {
+	private LogWriter consoleWriter;
+	private LogWriter fileWriter;
+	public LogWriter getConsoleWriter() {
 		return consoleWriter;
 	}
 	public void setConsoleWriter(ConsoleWriter consoleWriter) {
 		this.consoleWriter = consoleWriter;
 	}
-	public FileWriter getFileWriter() {
+	public LogWriter getFileWriter() {
 		return fileWriter;
 	}
 	public void setFileWriter(FileWriter fileWriter) {
