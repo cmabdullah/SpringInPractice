@@ -62,5 +62,6 @@
 			<entry key="forth" value-ref="contact4"></entry>
 		</map>
 	</property>
+	<property name="patient"><null/></property>
 	</bean>
 </beans>
