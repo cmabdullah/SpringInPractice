@@ -2278,8 +2278,8 @@ public class App {
     public static void main( String[] args ){
     	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
     	Logger logger = (Logger) context.getBean("logger");
-    	logger.writeConsole("Hello There");
-    	logger.writeFile("Hi there");
+    	logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
+    	logger.writeFile("Hi there");		// writeFile method exist on Logger class
     ((ClassPathXmlApplicationContext)context).close();
     }
 }
@@ -2321,8 +2321,8 @@ public class FileWriter implements LogWriter {
 ```java
 package com.cma.spring.exceptiontest;
 public class Logger {
-	private LogWriter consoleWriter;
-	private LogWriter fileWriter;
+	private LogWriter consoleWriter; //type LogWriter
+	private LogWriter fileWriter;	// type LogWriter
 	public LogWriter getConsoleWriter() {
 		return consoleWriter;
 	}
@@ -2360,7 +2360,7 @@ public class Logger {
 		class="com.cma.spring.exceptiontest.FileWriter">
 	</bean>
 	<bean id="logger" class="com.cma.spring.exceptiontest.Logger"
-		autowire="byName"><!--autowrite byName, that access different name of bean based on name or id-->
+		autowire="byName"><!--autowrite byName, that access different name of bean, based on name or id-->
 	</bean>
 </beans>
 ```
