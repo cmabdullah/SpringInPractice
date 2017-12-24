@@ -2366,8 +2366,8 @@ public class Logger {
 ```
 
 
-# Lacture 20
-## Objective : Autowiring by Name
+# Lacture 21
+## Objective : Autowiring by Constructure
 
 ### App.java
 
@@ -2428,13 +2428,13 @@ public class Logger {
 		this.consoleWriter = consoleWriter;
 		this.fileWriter = fileWriter;
 	}
-	public LogWriter getConsoleWriter() {
+	public LogWriter getConsoleWriter() { //type LogWriter
 		return consoleWriter;
 	}
 	public void setConsoleWriter(LogWriter consoleWriter) {
 		this.consoleWriter = consoleWriter;
 	}
-	public LogWriter getFileWriter() {
+	public LogWriter getFileWriter() { // type LogWriter
 		return fileWriter;
 	}
 	public void setFileWriter(LogWriter fileWriter) {
@@ -2466,6 +2466,111 @@ public class Logger {
 	</bean>
 	<bean id="logger" class="com.cma.spring.exceptiontest.Logger"
 		autowire="constructor">
+	</bean>
+</beans>
+```
+
+
+
+
+# Lacture 22
+## Objective : Default Autowiring
+
+### App.java
+
+ ```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class App {
+    public static void main( String[] args ){
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+    	Logger logger = (Logger) context.getBean("logger");
+    	logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
+    	logger.writeFile("Hi there");		// writeFile method exist on Logger class
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+```
+
+### LogWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+public interface LogWriter {
+	public void write(String text);
+}
+```
+
+### ConsoleWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+public class ConsoleWriter implements LogWriter {
+	public void write(String text) {
+	System.out.println("From console Writer : "+text);
+	}
+}
+```
+
+### FileWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+public class FileWriter implements LogWriter {
+	public void write(String text) {
+		System.out.println("From file : "+text);
+	}
+}
+```
+
+### Logger.java
+
+```java
+package com.cma.spring.exceptiontest;
+public class Logger {
+	private ConsoleWriter consoleWriter;
+	private FileWriter fileWriter;
+
+	public LogWriter getConsoleWriter() { //type LogWriter
+		return consoleWriter;
+	}
+	public void setConsoleWriter(ConsoleWriter consoleWriter) {
+		this.consoleWriter = consoleWriter;
+	}
+	public LogWriter getFileWriter() { // type LogWriter
+		return fileWriter;
+	}
+	public void setFileWriter(FileWriter fileWriter) {
+		this.fileWriter = fileWriter;
+	}
+	public void writeFile(String text) {
+		fileWriter.write(text);
+	}
+	public void writeConsole(String text) {
+		consoleWriter.write(text);	
+	}	
+}
+```
+
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	default-autowire="byType" default-autowire-candidates="*Writer">
+
+	<bean id="consoleWriter"
+		class="com.cma.spring.exceptiontest.ConsoleWriter">
+	</bean>
+	<bean id="fileWriter"
+		class="com.cma.spring.exceptiontest.FileWriter">
+	</bean>
+	<bean id="logger" 
+		class="com.cma.spring.exceptiontest.Logger">
 	</bean>
 </beans>
 ```
