@@ -12,6 +12,6 @@
 		class="com.cma.spring.exceptiontest.FileWriter">
 	</bean>
 	<bean id="logger" class="com.cma.spring.exceptiontest.Logger"
-		autowire="byName">
+		autowire="constructor">
 	</bean>
 </beans>
