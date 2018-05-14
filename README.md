@@ -2561,7 +2561,7 @@ public class Logger {
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
-	default-autowire="byType" default-autowire-candidates="*Writer">
+	default-autowire="byType">
 
 	<bean id="consoleWriter"
 		class="com.cma.spring.exceptiontest.ConsoleWriter">
@@ -2569,6 +2569,11 @@ public class Logger {
 	<bean id="fileWriter"
 		class="com.cma.spring.exceptiontest.FileWriter">
 	</bean>
+
+	<bean id="whatever"
+		class="com.cma.spring.exceptiontest.FileWriter"
+		autowire-candidate="false">
+	</bean>	
 	<bean id="logger" 
 		class="com.cma.spring.exceptiontest.Logger">
 	</bean>
