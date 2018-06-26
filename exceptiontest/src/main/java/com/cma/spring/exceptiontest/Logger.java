@@ -18,11 +18,8 @@ public class Logger {
 	}
 	public void writeFile(String text) {
 		fileWriter.write(text);
-		
 	}
 	public void writeConsole(String text) {
-		consoleWriter.write(text);
-		
+		consoleWriter.write(text);	
 	}
-	
 }

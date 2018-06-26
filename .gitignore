@@ -11,3 +11,4 @@
 *.cproject
 *.settings
 *.class
+*.DS_Store

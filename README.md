@@ -42,7 +42,8 @@
 # Lacture 4
 ## Objective : Define patient class beans
 ### App.java
- ```java
+
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
@@ -88,7 +89,8 @@ public class Patient {
 # Lacture 5
 ## Objective : Load beans.xml through Class Path Xml Application Context
 ### App.java
- ```java
+
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -135,7 +137,7 @@ public class Patient {
 ###### If a class has some properties, wants to initialize through beans Constructor, beans access attributs through getters and setters, coz its a private attribute 
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -209,7 +211,7 @@ public class Patient {
 ## Objective : How Define Beans Property
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -298,7 +300,7 @@ public class Patient {
 ##### How we inject Address object into patient class?
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -437,7 +439,7 @@ public class Address {
 
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -544,7 +546,7 @@ public class Address {
 
 	<bean id="patient" 
 	class="com.cma.spring.exceptiontest.Patient"
-	scope="prototype"><!--here scope is ont singleton its prototype , always return different object-->
+	scope="prototype"><!--here scope is not singleton its prototype , always return different object-->
 	<constructor-arg value="5" name="id"></constructor-arg><!-- Add constructor arguments -->
 	<constructor-arg value="cm" name="name"></constructor-arg>
 	<property name="nationalId" value="1234"></property>
@@ -570,7 +572,7 @@ public class Address {
 
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -587,6 +589,7 @@ public class App {
 ```
 
 ### Patient.java
+
 ```java
 package com.cma.spring.exceptiontest;
 import java.util.List;
@@ -2577,5 +2580,119 @@ public class Logger {
 	<bean id="logger" 
 		class="com.cma.spring.exceptiontest.Logger">
 	</bean>
+</beans>
+```
+
+
+# Lacture 23
+## Objective : Removed Autowiring ambiguity
+
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class App {
+public static void main( String[] args ){
+ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+Logger logger = (Logger) context.getBean("logger");
+logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
+logger.writeFile("Hi there");        // writeFile method exist on Logger class
+((ClassPathXmlApplicationContext)context).close();
+}
+}
+```
+
+### LogWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+public interface LogWriter {
+public void write(String text);
+}
+```
+
+### ConsoleWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+public class ConsoleWriter implements LogWriter {
+public void write(String text) {
+System.out.println("From console Writer : "+text);
+}
+}
+```
+
+### FileWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+public class FileWriter implements LogWriter {
+public void write(String text) {
+System.out.println("From file : "+text);
+}
+}
+```
+
+### Logger.java
+
+```java
+package com.cma.spring.exceptiontest;
+public class Logger {
+private ConsoleWriter consoleWriter;
+private FileWriter fileWriter;
+
+public LogWriter getConsoleWriter() { //type LogWriter
+return consoleWriter;
+}
+public void setConsoleWriter(ConsoleWriter consoleWriter) {
+this.consoleWriter = consoleWriter;
+}
+public LogWriter getFileWriter() { // type LogWriter
+return fileWriter;
+}
+public void setFileWriter(FileWriter fileWriter) {
+this.fileWriter = fileWriter;
+}
+public void writeFile(String text) {
+fileWriter.write(text);
+}
+public void writeConsole(String text) {
+consoleWriter.write(text);    
+}    
+}
+```
+
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+default-autowire="byType">
+
+
+<bean id="consoleWriter"
+class="com.cma.spring.exceptiontest.ConsoleWriter"
+primary="true"><!-- removed Autowiring ambiguity -->
+</bean>
+
+<bean id="consoleWriter1"
+class="com.cma.spring.exceptiontest.ConsoleWriter">
+</bean>
+<bean id="fileWriter"
+class="com.cma.spring.exceptiontest.FileWriter">
+</bean>
+
+<bean id="whatever" class="com.cma.spring.exceptiontest.FileWriter"
+autowire-candidate="false">
+</bean>
+
+<bean id="logger" 
+class="com.cma.spring.exceptiontest.Logger">
+</bean>
 </beans>
 ```

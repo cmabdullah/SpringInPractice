@@ -6,6 +6,11 @@
 
 
 	<bean id="consoleWriter"
+		class="com.cma.spring.exceptiontest.ConsoleWriter"
+		primary="true"><!-- removed Autowiring ambiguity -->
+	</bean>
+	
+	<bean id="consoleWriter1"
 		class="com.cma.spring.exceptiontest.ConsoleWriter">
 	</bean>
 	<bean id="fileWriter"
