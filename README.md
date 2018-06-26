@@ -3075,3 +3075,118 @@ public class Logger {
 ```
 
 
+# Lacture 27
+## Objective : Resource Annotation JSR 250
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class App {
+	public static void main( String[] args ){
+	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+	Logger logger = (Logger) context.getBean("logger");
+	logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
+	logger.writeFile("Hi there");        // writeFile method exist on Logger class
+	((ClassPathXmlApplicationContext)context).close();
+	}
+}
+```
+
+### LogWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+public interface LogWriter {
+	public void write(String text);
+}
+```
+
+### ConsoleWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+public class ConsoleWriter implements LogWriter {
+	public void write(String text) {
+	System.out.println("From console Writer : "+text);
+	}
+}
+```
+
+### FileWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+public class FileWriter implements LogWriter {
+	public void write(String text) {
+		System.out.println("From file : "+text);
+	}
+}
+```
+
+### Logger.java
+
+```java
+package com.cma.spring.exceptiontest;
+import javax.annotation.Resource;
+public class Logger {
+
+	private ConsoleWriter consoleWriter;
+	private LogWriter fileWriter;
+
+	@Resource(name="example")
+	public void setConsoleWriter(ConsoleWriter consoleWriter) {
+		this.consoleWriter = consoleWriter;
+	}
+
+	@Resource(name="DemoWriter")
+	public void setFileWriter(LogWriter fileWriter) {
+		this.fileWriter = fileWriter;
+	}
+	public void writeFile(String text) {
+		fileWriter.write(text);
+	}
+	public void writeConsole(String text) {
+		consoleWriter.write(text);	
+	}
+}
+
+```
+
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+	<bean id="example"
+		class="com.cma.spring.exceptiontest.ConsoleWriter">
+	</bean>
+
+	<bean id="mrBin"
+		class="com.cma.spring.exceptiontest.ConsoleWriter">
+	<qualifier value="consolewriter"></qualifier>
+	</bean>
+
+
+	<bean id="DemoWriter"
+		class="com.cma.spring.exceptiontest.FileWriter">
+	</bean>
+
+	<bean id="logger" 
+		class="com.cma.spring.exceptiontest.Logger">
+	</bean>
+	<context:annotation-config></context:annotation-config>
+</beans>
+```
+
+
+
