@@ -2,16 +2,19 @@ package com.cma.spring.exceptiontest;
 import javax.annotation.*;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.springframework.stereotype.Component;
+@Component
 public class Logger {
 
 	private ConsoleWriter consoleWriter;
 	private LogWriter fileWriter;
 	@Inject
-	@Named(value="demoWriter2")
 	public void setConsoleWriter(ConsoleWriter consoleWriter) {
 		this.consoleWriter = consoleWriter;
 	}
 	@Inject
+	@Named(value="filewriter")//filewriter
 	public void setFileWriter(LogWriter fileWriter) {
 		this.fileWriter = fileWriter;
 	}

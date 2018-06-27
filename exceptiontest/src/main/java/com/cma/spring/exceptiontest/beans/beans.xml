@@ -6,21 +6,8 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 
-	<bean id="demoWriter2"
-		class="com.cma.spring.exceptiontest.ConsoleWriter">
-	</bean>
-	
-	<bean id="consoleWriter2"
-		class="com.cma.spring.exceptiontest.ConsoleWriter">
-	</bean>
-
-
-	<bean id="fileWriter"
-		class="com.cma.spring.exceptiontest.FileWriter">
-	</bean>
-
-	<bean id="logger" 
-		class="com.cma.spring.exceptiontest.Logger">
-	</bean>
 	<context:annotation-config></context:annotation-config>
+	<context:component-scan
+		base-package="com.cma.spring.exceptiontest">
+	</context:component-scan>
 </beans>

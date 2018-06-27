@@ -3311,8 +3311,8 @@ public class Logger {
 ```
 
 
-# Lacture 28
-## Objective : init destroy method through annotation
+# Lacture 29
+## Objective : 29 Inject Annotation JSR 330
 ### App.java
 
 ```java
@@ -3429,6 +3429,128 @@ public class Logger {
 		class="com.cma.spring.exceptiontest.Logger">
 	</bean>
 	<context:annotation-config></context:annotation-config>
+</beans>
+```
+
+
+
+
+
+
+
+# Lacture 30
+## Objective : Automatic Bean Discovery
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class App {
+	public static void main( String[] args ){
+	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+	Logger logger = (Logger) context.getBean("logger");
+	logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
+	logger.writeFile("Hi there");        // writeFile method exist on Logger class
+	((ClassPathXmlApplicationContext)context).close();
+	}
+}
+```
+
+### LogWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+public interface LogWriter {
+	public void write(String text);
+}
+```
+
+### ConsoleWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ConsoleWriter implements LogWriter {
+	public void write(String text) {
+	System.out.println("From console Writer : "+text);
+	}
+}
+```
+
+### FileWriter.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class FileWriter implements LogWriter {
+	public void write(String text) {
+		System.out.println("From file : "+text);
+	}
+}
+```
+
+### Logger.java
+
+```java
+package com.cma.spring.exceptiontest;
+import javax.annotation.*;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.springframework.stereotype.Component;
+@Component
+public class Logger {
+
+	private ConsoleWriter consoleWriter;
+	private LogWriter fileWriter;
+	@Inject
+	public void setConsoleWriter(ConsoleWriter consoleWriter) {
+		this.consoleWriter = consoleWriter;
+	}
+	@Inject
+	@Named(value="filewriter")//filewriter
+	public void setFileWriter(LogWriter fileWriter) {
+		this.fileWriter = fileWriter;
+	}
+	public void writeFile(String text) {
+		fileWriter.write(text);
+	}
+	public void writeConsole(String text) {
+		consoleWriter.write(text);	
+	}
+	@PostConstruct
+	public void init() {
+		System.out.println("beans created");
+	}
+	@PreDestroy
+	public void destroy() {
+		System.out.println("beans destroyed");
+	}
+}
+```
+
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+	<context:annotation-config></context:annotation-config>
+	<context:component-scan
+		base-package="com.cma.spring.exceptiontest">
+	</context:component-scan><!--Scan All class object-->
 </beans>
 ```
 
