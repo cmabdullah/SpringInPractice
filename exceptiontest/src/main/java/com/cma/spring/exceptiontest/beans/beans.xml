@@ -6,8 +6,18 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 
-	<context:annotation-config></context:annotation-config>
-	<context:component-scan
-		base-package="com.cma.spring.exceptiontest">
-	</context:component-scan>
+	<bean id="parrot" class="com.cma.spring.exceptiontest.Parrot">
+	<!-- 
+		<property name="id" value="30"></property>
+		<property name="speech" value="My name is Abdullah"></property>
+		
+		 -->
+		 <!-- spell and parse integer -->
+		<property name="id" value="#{34+30}"></property>
+		<property name="speech" value="#{random.getText()}"></property>
+	</bean>
+	<bean id="random"
+		class="com.cma.spring.exceptiontest.RandomSpeech">
+	
+	</bean>
 </beans>

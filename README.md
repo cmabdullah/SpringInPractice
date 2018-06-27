@@ -3626,4 +3626,106 @@ public class Cat {
 ```
 
 
+# Lacture 32
+## Objective : Introducing SPEL
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main( String[] args ){
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+    	Parrot parrot = (Parrot) context.getBean("parrot");
+    	parrot.speek();
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+
+```
+
+
+
+### Parrot.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Parrot {
+	private int id = 0;
+	private String speech= "Dont feel like" ;
+	@Autowired
+	public void setId(@Value("1234")int id) {
+		this.id = id;
+	}
+	@Autowired
+	public void setSpeech(@Value("How are You")String speech) {
+		this.speech = speech;
+	}
+	public void speek() {
+		System.out.println(id+": "+speech);
+	}
+
+}
+
+```
+
+### RandomSpeech.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import java.util.Random;
+
+public class RandomSpeech {
+	private static String[] texts = {
+			"I will back",
+			"Get out !",
+			"I want you clothes, boots and byck",
+			null
+	};
+	public String getText() {
+		Random random = new Random();
+		return texts[random.nextInt(texts.length)];
+	}
+}
+
+
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+	<bean id="parrot" class="com.cma.spring.exceptiontest.Parrot">
+	<!-- 
+		<property name="id" value="30"></property>
+		<property name="speech" value="My name is Abdullah"></property>
+		
+		 -->
+		 <!-- spell and parse integer -->
+		<property name="id" value="#{34+30}"></property>
+		<property name="speech" value="#{random.getText()}"></property>
+	</bean>
+	<bean id="random"
+		class="com.cma.spring.exceptiontest.RandomSpeech">
+	
+	</bean>
+</beans>
+```
+
 
