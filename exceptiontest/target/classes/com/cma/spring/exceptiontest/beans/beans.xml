@@ -6,17 +6,16 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 
-	<bean id="example"
+	<bean id="demoWriter2"
+		class="com.cma.spring.exceptiontest.ConsoleWriter">
+	</bean>
+	
+	<bean id="consoleWriter2"
 		class="com.cma.spring.exceptiontest.ConsoleWriter">
 	</bean>
 
-	<bean id="mrBin"
-		class="com.cma.spring.exceptiontest.ConsoleWriter">
-	<qualifier value="consolewriter"></qualifier>
-	</bean>
 
-
-	<bean id="DemoWriter"
+	<bean id="fileWriter"
 		class="com.cma.spring.exceptiontest.FileWriter">
 	</bean>
 
