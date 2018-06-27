@@ -3555,3 +3555,75 @@ public class Logger {
 ```
 
 
+
+# Lacture 31
+## Objective : Setting Property Values through Annotations
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main( String[] args ){
+
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+    	Cat cat = (Cat) context.getBean("cat");
+    	cat.speek();
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+
+```
+
+
+
+### Cat.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Cat {
+	private int id = 0;
+	private String speec= "Dont feel like" ;
+	@Autowired
+	public void setId(@Value("1234")int id) {
+		this.id = id;
+	}
+	@Autowired
+	public void setSpeec(@Value("How are You")String speec) {
+		this.speec = speec;
+	}
+	public void speek() {
+		System.out.println(id+": "+speec);
+	}
+}
+```
+
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+	<context:annotation-config></context:annotation-config>
+	<context:component-scan
+		base-package="com.cma.spring.exceptiontest">
+	</context:component-scan><!--Scan All class object-->
+</beans>
+```
+
+
+

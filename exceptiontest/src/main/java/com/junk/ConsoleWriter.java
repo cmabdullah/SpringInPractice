@@ -1,4 +1,4 @@
-package com.cma.spring.exceptiontest;
+package com.junk;
 
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.cma.spring.exceptiontest;
+package com.junk;
 import javax.annotation.*;
 import javax.inject.Inject;
 import javax.inject.Named;

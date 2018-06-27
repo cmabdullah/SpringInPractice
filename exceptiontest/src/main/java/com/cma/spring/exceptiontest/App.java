@@ -8,9 +8,9 @@ public class App
     {
 
     	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
-    	Logger logger = (Logger) context.getBean("logger");
-    	logger.writeConsole("Hello There");
-    	logger.writeFile("Hi there");
+    	Cat cat = (Cat) context.getBean("cat");
+    	cat.speek();
+    	
 
     ((ClassPathXmlApplicationContext)context).close();
     }
