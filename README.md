@@ -726,7 +726,7 @@ public class Address {
 ##### we have to create a factory method, through factory method to beans configuration, we have to take patient beans
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -876,7 +876,7 @@ public class Address {
 ## Objective : Factory Class
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -892,7 +892,7 @@ public class App {
 
 
 ### PatientFactory.java
- ```java
+```java
  package com.cma.spring.exceptiontest;
  public class PatientFactory {
 	public Patient createPatient(int id, String name){
@@ -1059,7 +1059,7 @@ public class Address {
 ## Objective : Define properties using p-namespace, (just alternative way)
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -1216,7 +1216,7 @@ public class Address {
 
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -1375,7 +1375,7 @@ public class Address {
 
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -1479,7 +1479,7 @@ public class Patient {
 
 
 ### App.java
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -1615,7 +1615,7 @@ public class Patient {
 
 ### App.java
 
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -1774,7 +1774,7 @@ public class Patient {
 
 ### App.java
 
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -1969,7 +1969,7 @@ public class Patient {
 
 ### App.java
 
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -2172,7 +2172,7 @@ public class Patient {
 
 ### App.java
 
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -2273,7 +2273,7 @@ public class Logger {
 
 ### App.java
 
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -2374,7 +2374,7 @@ public class Logger {
 
 ### App.java
 
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -2481,7 +2481,7 @@ public class Logger {
 
 ### App.java
 
- ```java
+```java
 package com.cma.spring.exceptiontest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -2595,12 +2595,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class App {
 public static void main( String[] args ){
-ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
-Logger logger = (Logger) context.getBean("logger");
-logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
-logger.writeFile("Hi there");        // writeFile method exist on Logger class
-((ClassPathXmlApplicationContext)context).close();
-}
+	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+	Logger logger = (Logger) context.getBean("logger");
+	logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
+	logger.writeFile("Hi there");        // writeFile method exist on Logger class
+	((ClassPathXmlApplicationContext)context).close();
+	}
 }
 ```
 
@@ -2609,7 +2609,7 @@ logger.writeFile("Hi there");        // writeFile method exist on Logger class
 ```java
 package com.cma.spring.exceptiontest;
 public interface LogWriter {
-public void write(String text);
+	public void write(String text);
 }
 ```
 
@@ -2618,9 +2618,9 @@ public void write(String text);
 ```java
 package com.cma.spring.exceptiontest;
 public class ConsoleWriter implements LogWriter {
-public void write(String text) {
-System.out.println("From console Writer : "+text);
-}
+	public void write(String text) {
+	System.out.println("From console Writer : "+text);
+	}
 }
 ```
 
@@ -2629,9 +2629,9 @@ System.out.println("From console Writer : "+text);
 ```java
 package com.cma.spring.exceptiontest;
 public class FileWriter implements LogWriter {
-public void write(String text) {
-System.out.println("From file : "+text);
-}
+	public void write(String text) {
+	System.out.println("From file : "+text);
+	}
 }
 ```
 
@@ -2640,27 +2640,27 @@ System.out.println("From file : "+text);
 ```java
 package com.cma.spring.exceptiontest;
 public class Logger {
-private ConsoleWriter consoleWriter;
-private FileWriter fileWriter;
+	private ConsoleWriter consoleWriter;
+	private FileWriter fileWriter;
 
-public LogWriter getConsoleWriter() { //type LogWriter
-return consoleWriter;
-}
-public void setConsoleWriter(ConsoleWriter consoleWriter) {
-this.consoleWriter = consoleWriter;
-}
-public LogWriter getFileWriter() { // type LogWriter
-return fileWriter;
-}
-public void setFileWriter(FileWriter fileWriter) {
-this.fileWriter = fileWriter;
-}
-public void writeFile(String text) {
-fileWriter.write(text);
-}
-public void writeConsole(String text) {
-consoleWriter.write(text);    
-}    
+	public LogWriter getConsoleWriter() { //type LogWriter
+	return consoleWriter;
+	}
+	public void setConsoleWriter(ConsoleWriter consoleWriter) {
+	this.consoleWriter = consoleWriter;
+	}
+	public LogWriter getFileWriter() { // type LogWriter
+	return fileWriter;
+	}
+	public void setFileWriter(FileWriter fileWriter) {
+	this.fileWriter = fileWriter;
+	}
+	public void writeFile(String text) {
+	fileWriter.write(text);
+	}
+	public void writeConsole(String text) {
+	consoleWriter.write(text);    
+	}    
 }
 ```
 
@@ -2709,12 +2709,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class App {
 public static void main( String[] args ){
-ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
-Logger logger = (Logger) context.getBean("logger");
-logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
-logger.writeFile("Hi there");        // writeFile method exist on Logger class
-((ClassPathXmlApplicationContext)context).close();
-}
+	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+	Logger logger = (Logger) context.getBean("logger");
+	logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
+	logger.writeFile("Hi there");        // writeFile method exist on Logger class
+	((ClassPathXmlApplicationContext)context).close();
+	}
 }
 ```
 
@@ -2723,7 +2723,7 @@ logger.writeFile("Hi there");        // writeFile method exist on Logger class
 ```java
 package com.cma.spring.exceptiontest;
 public interface LogWriter {
-public void write(String text);
+	public void write(String text);
 }
 ```
 
@@ -2732,9 +2732,9 @@ public void write(String text);
 ```java
 package com.cma.spring.exceptiontest;
 public class ConsoleWriter implements LogWriter {
-public void write(String text) {
-System.out.println("From console Writer : "+text);
-}
+	public void write(String text) {
+	System.out.println("From console Writer : "+text);
+	}
 }
 ```
 
@@ -2743,9 +2743,9 @@ System.out.println("From console Writer : "+text);
 ```java
 package com.cma.spring.exceptiontest;
 public class FileWriter implements LogWriter {
-public void write(String text) {
-System.out.println("From file : "+text);
-}
+	public void write(String text) {
+	System.out.println("From file : "+text);
+	}
 }
 ```
 
@@ -2830,12 +2830,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class App {
 public static void main( String[] args ){
-ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
-Logger logger = (Logger) context.getBean("logger");
-logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
-logger.writeFile("Hi there");        // writeFile method exist on Logger class
-((ClassPathXmlApplicationContext)context).close();
-}
+	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+	Logger logger = (Logger) context.getBean("logger");
+	logger.writeConsole("Hello There"); // writeConsole method exist on Logger class
+	logger.writeFile("Hi there");        // writeFile method exist on Logger class
+	((ClassPathXmlApplicationContext)context).close();
+	}
 }
 ```
 
@@ -2844,7 +2844,7 @@ logger.writeFile("Hi there");        // writeFile method exist on Logger class
 ```java
 package com.cma.spring.exceptiontest;
 public interface LogWriter {
-public void write(String text);
+	public void write(String text);
 }
 ```
 
@@ -2853,9 +2853,9 @@ public void write(String text);
 ```java
 package com.cma.spring.exceptiontest;
 public class ConsoleWriter implements LogWriter {
-public void write(String text) {
-System.out.println("From console Writer : "+text);
-}
+	public void write(String text) {
+	System.out.println("From console Writer : "+text);
+	}
 }
 ```
 
@@ -2864,9 +2864,9 @@ System.out.println("From console Writer : "+text);
 ```java
 package com.cma.spring.exceptiontest;
 public class FileWriter implements LogWriter {
-public void write(String text) {
-System.out.println("From file : "+text);
-}
+	public void write(String text) {
+	System.out.println("From file : "+text);
+	}
 }
 ```
 
@@ -3431,11 +3431,6 @@ public class Logger {
 	<context:annotation-config></context:annotation-config>
 </beans>
 ```
-
-
-
-
-
 
 
 # Lacture 30
