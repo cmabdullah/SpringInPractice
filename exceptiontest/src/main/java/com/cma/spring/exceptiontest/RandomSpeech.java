@@ -2,6 +2,8 @@ package com.cma.spring.exceptiontest;
 
 import java.util.Random;
 
+import org.springframework.stereotype.Component;
+@Component
 public class RandomSpeech {
 	private static String[] texts = {
 			"I will back",

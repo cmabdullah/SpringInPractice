@@ -6,14 +6,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Parrot {
-	private int id = 0;
-	private String speech= "Dont feel like" ;
+	private String id ;
+	private String speech ;
 	@Autowired
-	public void setId(@Value("1234")int id) {
+	public void setId(@Value("#{randomSpeech.getText()?.length()}")String id) {
 		this.id = id;
 	}
 	@Autowired
-	public void setSpeech(@Value("How are You")String speech) {
+	public void setSpeech(@Value("#{randomSpeech.getText()}")String speech) {
 		this.speech = speech;
 	}
 	public void speek() {
