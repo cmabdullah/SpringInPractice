@@ -18,12 +18,15 @@ public class App {
     	}
     	**/
     	try {
+    		
+    		
+    		noticesDAO.delete(2); //delete method called
     		List<Notice> notices = noticesDAO.getNotices();
+    		
         	for(Notice notice: notices) {
         		System.out.println(notice);
         	}
-        	Notice notice = noticesDAO.getNotice(2);
-        	System.out.println("Single Notice : "+notice);
+
     	}catch(CannotGetJdbcConnectionException e) {
     		System.out.println(e.getMessage());
     		System.out.println(e.getClass());

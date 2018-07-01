@@ -32,6 +32,14 @@ public class NoticesDAO {
 		});
 	}
 	
+	public boolean delete(int id) { // delete method
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("id", id);
+		return jdbc.update("delete from notices where id = :id", params ) == 1 ; // return true if success
+	}
+	
+	
+	
 	public Notice getNotice(int id){
 		//কোন অর্ডার ফলো করতে হয় না।
 		//MapSqlParameterSource params = new MapSqlParameterSource("name", "cm");
