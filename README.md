@@ -3914,3 +3914,393 @@ public class RandomSpeech {
 </beans>
 ```
 
+
+
+# Lacture 34
+## Objective : SPEL with Operator
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main( String[] args ){
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+    	Parrot parrot = (Parrot) context.getBean("parrot");
+    	parrot.speek();
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+
+```
+
+
+
+### Parrot.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Parrot {
+	private String id ;
+	private String speech ;
+	@Autowired
+	public void setId(@Value("#{randomSpeech.getText()?.length()}")String id) {
+		this.id = id;
+	}
+	@Autowired
+	//public void setSpeech(@Value("#{new java.util.Date().toString()}")String speech) {
+	//public void setSpeech(@Value("#{T(Math).PI}")String speech) {
+	public void setSpeech(@Value("#{T(Math).sin(T(Math).PI/4) lt 0.4 ? 'yes' : 'no'}")String speech) {
+		this.speech = speech;
+	}
+	public void speek() {
+		System.out.println(id+": "+speech);
+	}
+
+}
+
+```
+
+### RandomSpeech.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import java.util.Random;
+import org.springframework.stereotype.Component;
+@Component
+public class RandomSpeech {
+	private static String[] texts = {
+			"I will back",
+			"Get out !",
+			"I want you clothes, boots and byck",
+			null
+	};
+	public String getText() {
+		Random random = new Random();
+		return texts[random.nextInt(texts.length)];
+	}
+}
+
+
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	<context:component-scan
+		base-package="com.cma.spring.exceptiontest">
+	</context:component-scan>
+
+</beans>
+```
+
+
+
+# Lacture 37/1
+## Objective : Using Property Files (XML)
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main( String[] args ){
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+    	Parrot parrot = (Parrot) context.getBean("parrot");
+    	parrot.speek();
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+
+```
+
+
+
+### Parrot.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+public class Parrot {
+	private String id = "123";
+	private String speech ="Hi cm" ;
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setSpeech(String speech) {
+		this.speech = speech;
+	}
+	public void speek() {
+		System.out.println(id+": "+speech);
+	}
+}
+
+
+```
+
+### jdbc.properties
+
+> location="com/cma/spring/exceptiontest/props/jdbc.properties"
+
+```properties
+	jdbc.user = root
+	jdbc.password = rootcm
+```
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<bean id="parrot" class="com.cma.spring.exceptiontest.Parrot">
+	<property name="id" value='${jdbc.user}'></property>
+	<property name="speech" value="${jdbc.password}"></property>
+	</bean>
+	<context:property-placeholder
+		location="com/cma/spring/exceptiontest/props/jdbc.properties" />
+</beans>
+```
+
+
+# Lacture 37/2
+## Objective : Using Property Files (Annotation)
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main( String[] args ){
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+    	Parrot parrot = (Parrot) context.getBean("parrot");
+    	parrot.speek();
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+
+```
+
+
+
+### Parrot.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Parrot {
+	private String id = "123";
+	private String speech ="Hi cm" ;
+
+	@Autowired
+	public void setId(@Value("${jdbc.user}")String id) {
+		this.id = id;
+	}
+	@Autowired
+	public void setSpeech(@Value("${jdbc.password}")String speech) {
+		this.speech = speech;
+	}
+	public void speek() {
+		System.out.println(id+": "+speech);
+	}
+}
+```
+
+### jdbc.properties
+
+> location="com/cma/spring/exceptiontest/props/jdbc.properties"
+
+```properties
+	jdbc.user = root
+	jdbc.password = rootcm
+```
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<context:property-placeholder
+		location="com/cma/spring/exceptiontest/props/jdbc.properties" />
+	<context:component-scan
+		base-package="com.cma.spring.exceptiontest">
+	</context:component-scan>
+</beans>
+```
+
+
+
+# Lacture 38-40
+## Objective : Jdbc Template and Querying the Database
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import java.util.List;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main( String[] args ){
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+    	NoticesDAO noticesDAO = (NoticesDAO) context.getBean("noticesDAO");
+    	List<Notice> notices = noticesDAO.getNotice();
+    	for(Notice notice: notices) {
+    		System.out.println(notice);
+    	}
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+```
+
+
+
+### Notice.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+public class Notice {
+	private int id;
+	private String name;
+	private String email;
+	private String text;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	@Override
+	public String toString() {
+		return "Notice [id=" + id + ", name=" + name + ", email=" + email + ", text=" + text + "]";
+	}	
+}
+```
+
+### NoticesDAO.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+@Component("noticesDAO")
+public class NoticesDAO {
+	private JdbcTemplate jdbc;
+	@Autowired
+	public void setDataSource(DataSource jdbc) {
+		this.jdbc = new JdbcTemplate(jdbc);
+	}
+	public List<Notice> getNotice(){
+		return jdbc.query("select * from notices", new RowMapper<Notice>() {
+
+			public Notice mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Notice notice = new Notice();
+				notice.setId(rs.getInt("id"));
+				notice.setName(rs.getString("name"));
+				notice.setEmail(rs.getString("email"));
+				notice.setText(rs.getString("text"));
+				return notice;
+			}	
+		});
+	}
+}
+```
+
+### jdbc.properties
+
+> location="com/cma/spring/exceptiontest/props/jdbc.properties"
+
+```properties
+	jdbc.username = root
+	jdbc.password = rootcm
+	jdbc.driver = com.mysql.jdbc.Driver
+	jdbc.url = jdbc:mysql://localhost:3306/springtutorial?autoReconnect=true&useSSL=false
+```
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<context:property-placeholder
+		location="com/cma/spring/exceptiontest/props/jdbc.properties" />
+	<context:component-scan
+		base-package="com.cma.spring.exceptiontest">
+	</context:component-scan>
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+	<property name="driverClassName" value="${jdbc.driver}"></property>
+	<property name="url" value="${jdbc.url}"></property>
+	<property name="username" value="${jdbc.username}"></property>
+	<property name="password" value="${jdbc.password}"></property>
+	</bean>
+</beans>
+```
+
