@@ -4163,8 +4163,8 @@ public class Parrot {
 
 
 
-# Lacture 38-40
-## Objective : Jdbc Template and Querying the Database
+# Lacture 38-41
+## Objective : Jdbc Template and Querying the Database with exception
 ### App.java
 
 ```java
@@ -4174,15 +4174,33 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 
 public class App {
     public static void main( String[] args ){
     	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
     	NoticesDAO noticesDAO = (NoticesDAO) context.getBean("noticesDAO");
+    	/***
     	List<Notice> notices = noticesDAO.getNotice();
     	for(Notice notice: notices) {
     		System.out.println(notice);
     	}
+    	**/
+    	try {
+    		List<Notice> notices = noticesDAO.getNotice();
+        	for(Notice notice: notices) {
+        		System.out.println(notice);
+        	}	
+    	}catch(CannotGetJdbcConnectionException e) {
+    		System.out.println(e.getMessage());
+    		System.out.println(e.getClass());
+    	}
+    	catch(DataAccessException e) {
+    		System.out.println(e.getMessage());
+    		System.out.println(e.getClass());
+    	}
+
     ((ClassPathXmlApplicationContext)context).close();
     }
 }
@@ -4303,4 +4321,355 @@ public class NoticesDAO {
 	</bean>
 </beans>
 ```
+
+
+# Lacture 42/1
+## Objective : Spring Framework - Using Named Parameters, (Single parameter)
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import java.util.List;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
+
+public class App {
+    public static void main( String[] args ){
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+    	NoticesDAO noticesDAO = (NoticesDAO) context.getBean("noticesDAO");
+    	/***
+    	List<Notice> notices = noticesDAO.getNotice();
+    	for(Notice notice: notices) {
+    		System.out.println(notice);
+    	}
+    	**/
+    	try {
+    		List<Notice> notices = noticesDAO.getNotice();
+        	for(Notice notice: notices) {
+        		System.out.println(notice);
+        	}	
+    	}catch(CannotGetJdbcConnectionException e) {
+    		System.out.println(e.getMessage());
+    		System.out.println(e.getClass());
+    	}
+    	catch(DataAccessException e) {
+    		System.out.println(e.getMessage());
+    		System.out.println(e.getClass());
+    	}
+
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+```
+
+
+
+### Notice.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+public class Notice {
+	private int id;
+	private String name;
+	private String email;
+	private String text;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	@Override
+	public String toString() {
+		return "Notice [id=" + id + ", name=" + name + ", email=" + email + ", text=" + text + "]";
+	}	
+}
+```
+
+### NoticesDAO.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
+@Component("noticesDAO")
+public class NoticesDAO {
+	private NamedParameterJdbcTemplate jdbc;
+	@Autowired
+	public void setDataSource(DataSource jdbc) {
+		this.jdbc = new NamedParameterJdbcTemplate(jdbc);
+	}
+	public List<Notice> getNotice(){
+				//কোন অর্ডার ফলো করতে হয় না।
+		//MapSqlParameterSource params = new MapSqlParameterSource("name", "cm");
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("name", "cm");
+		//return jdbc.query("select * from notices where name = 'cm'", new RowMapper<Notice>() {
+		return jdbc.query("select * from notices where name = :name", params, new RowMapper<Notice>() {
+			public Notice mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Notice notice = new Notice();
+				notice.setId(rs.getInt("id"));
+				notice.setName(rs.getString("name"));
+				notice.setEmail(rs.getString("email"));
+				notice.setText(rs.getString("text"));
+				return notice;
+			}
+		});
+	}
+}
+
+```
+
+### jdbc.properties
+
+> location="com/cma/spring/exceptiontest/props/jdbc.properties"
+
+```properties
+	jdbc.username = root
+	jdbc.password = rootcm
+	jdbc.driver = com.mysql.jdbc.Driver
+	jdbc.url = jdbc:mysql://localhost:3306/springtutorial?autoReconnect=true&useSSL=false
+```
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<context:property-placeholder
+		location="com/cma/spring/exceptiontest/props/jdbc.properties" />
+	<context:component-scan
+		base-package="com.cma.spring.exceptiontest">
+	</context:component-scan>
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+	<property name="driverClassName" value="${jdbc.driver}"></property>
+	<property name="url" value="${jdbc.url}"></property>
+	<property name="username" value="${jdbc.username}"></property>
+	<property name="password" value="${jdbc.password}"></property>
+	</bean>
+</beans>
+```
+
+
+
+
+# Lacture 42/2
+## Objective : Spring Framework - Using Named Parameters, (return single object)
+### App.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import java.util.List;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
+
+public class App {
+    public static void main( String[] args ){
+    	ApplicationContext context = new ClassPathXmlApplicationContext("com/cma/spring/exceptiontest/beans/beans.xml");
+    	NoticesDAO noticesDAO = (NoticesDAO) context.getBean("noticesDAO");
+    	/***
+    	List<Notice> notices = noticesDAO.getNotice();
+    	for(Notice notice: notices) {
+    		System.out.println(notice);
+    	}
+    	**/
+    	try {
+    		List<Notice> notices = noticesDAO.getNotices();
+        	for(Notice notice: notices) {
+        		System.out.println(notice);
+        	}
+        	Notice notice = noticesDAO.getNotice(2);
+        	System.out.println("Single Notice : "+notice);
+    	}catch(CannotGetJdbcConnectionException e) {
+    		System.out.println(e.getMessage());
+    		System.out.println(e.getClass());
+    	}
+    	catch(DataAccessException e) {
+    		System.out.println(e.getMessage());
+    		System.out.println(e.getClass());
+    	}
+
+    ((ClassPathXmlApplicationContext)context).close();
+    }
+}
+
+```
+
+
+
+### Notice.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+public class Notice {
+	private int id;
+	private String name;
+	private String email;
+	private String text;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	@Override
+	public String toString() {
+		return "Notice [id=" + id + ", name=" + name + ", email=" + email + ", text=" + text + "]";
+	}	
+}
+```
+
+### NoticesDAO.java
+
+```java
+package com.cma.spring.exceptiontest;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
+@Component("noticesDAO")
+public class NoticesDAO {
+	private NamedParameterJdbcTemplate jdbc;
+	@Autowired
+	public void setDataSource(DataSource jdbc) {
+		this.jdbc = new NamedParameterJdbcTemplate(jdbc);
+	}
+	public List<Notice> getNotices(){
+		
+		return jdbc.query("select * from notices", new RowMapper<Notice>() {
+			public Notice mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Notice notice = new Notice();
+				notice.setId(rs.getInt("id"));
+				notice.setName(rs.getString("name"));
+				notice.setEmail(rs.getString("email"));
+				notice.setText(rs.getString("text"));
+				return notice;
+			}
+		});
+	}
+	
+	public Notice getNotice(int id){
+		//কোন অর্ডার ফলো করতে হয় না।
+		//MapSqlParameterSource params = new MapSqlParameterSource("name", "cm");
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("id", id);
+		//return jdbc.query("select * from notices where name = 'cm'", new RowMapper<Notice>() {
+		return jdbc.queryForObject("select * from notices where id = :id", params, new RowMapper<Notice>() {
+			public Notice mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Notice notice = new Notice();
+				notice.setId(rs.getInt("id"));
+				notice.setName(rs.getString("name"));
+				notice.setEmail(rs.getString("email"));
+				notice.setText(rs.getString("text"));
+				return notice;// return single object
+			}
+		});
+	}
+}
+```
+
+### jdbc.properties
+
+> location="com/cma/spring/exceptiontest/props/jdbc.properties"
+
+```properties
+	jdbc.username = root
+	jdbc.password = rootcm
+	jdbc.driver = com.mysql.jdbc.Driver
+	jdbc.url = jdbc:mysql://localhost:3306/springtutorial?autoReconnect=true&useSSL=false
+```
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<context:property-placeholder
+		location="com/cma/spring/exceptiontest/props/jdbc.properties" />
+	<context:component-scan
+		base-package="com.cma.spring.exceptiontest">
+	</context:component-scan>
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+	<property name="driverClassName" value="${jdbc.driver}"></property>
+	<property name="url" value="${jdbc.url}"></property>
+	<property name="username" value="${jdbc.username}"></property>
+	<property name="password" value="${jdbc.password}"></property>
+	</bean>
+</beans>
+```
+
 
