@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -37,8 +38,16 @@ public class NoticesDAO {
 		params.addValue("id", id);
 		return jdbc.update("delete from notices where id = :id", params ) == 1 ; // return true if success
 	}
+
+	public boolean create(Notice notice) {
+		BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(notice);
+		return jdbc.update("insert into notices (name , email, text) values (:name,:email,:text)", params) == 1;
+	}
 	
-	
+	public boolean update(Notice notice) {
+		BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(notice);
+		return jdbc.update("update notices set name=:name,email=:email,text=:text where id=:id", params) == 1;
+	}
 	
 	public Notice getNotice(int id){
 		//কোন অর্ডার ফলো করতে হয় না।

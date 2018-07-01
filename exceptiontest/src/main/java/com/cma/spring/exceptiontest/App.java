@@ -18,6 +18,11 @@ public class App {
     	}
     	**/
     	try {
+    		//insert notice
+    		
+    		Notice notice1 = new Notice(6,"mainul", "mainul@gmail.com", "hi mainul How are you?");
+    		//noticesDAO.create(notice1);
+    		noticesDAO.update(notice1);
     		
     		
     		noticesDAO.delete(2); //delete method called
