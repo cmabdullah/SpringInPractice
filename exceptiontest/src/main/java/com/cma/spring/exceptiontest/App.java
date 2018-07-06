@@ -21,10 +21,10 @@ public class App {
     	try {
     		//insert notice
     		
-    		Notice notice1 = new Notice("mainul1", "mainul@gmail.com", "hi mainul How are you?");
-    		Notice notice2 = new Notice("mainul2", "mainul@gmail.com", "hi mainul How are you?");
-    		Notice notice3 = new Notice("mainul3", "mainul@gmail.com", "hi mainul How are you?");
-    		Notice notice4 = new Notice("mainul4", "mainul@gmail.com", "hi mainul How are you?");
+    		Notice notice1 = new Notice(27,"mainul1", "mainul@gmail.com", "hi mainul How are you?");
+    		Notice notice2 = new Notice(36,"mainul2", "mainul@gmail.com", "hi mainul How are you?");
+    		Notice notice3 = new Notice(35,"mainul3", "mainul@gmail.com", "hi mainul How are you?");
+    		Notice notice4 = new Notice(34,"mainul4", "mainul@gmail.com", "hi mainul How are you?");
     		//noticesDAO.create(notice1);
     		//noticesDAO.update(notice1);
     		

@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 @Component("noticesDAO")
 public class NoticesDAO {
 	private NamedParameterJdbcTemplate jdbc;
@@ -22,7 +23,7 @@ public class NoticesDAO {
 		this.jdbc = new NamedParameterJdbcTemplate(jdbc);
 	}
 	public List<Notice> getNotices(){
-		//data retrive method
+		
 		return jdbc.query("select * from notices", new RowMapper<Notice>() {
 			public Notice mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Notice notice = new Notice();
@@ -41,12 +42,12 @@ public class NoticesDAO {
 		return jdbc.update("delete from notices where id = :id", params ) == 1 ; // return true if success
 	}
 	
-	//Batch Update
+	@Transactional
 	public int[] create(List<Notice> notices) {
 		SqlParameterSource[] params =  SqlParameterSourceUtils.createBatch(notices.toArray());
-		return jdbc.batchUpdate("insert into notices (name , email, text) values (:name,:email,:text)", params);		
+		return jdbc.batchUpdate("insert into notices (id,name , email, text) values (:id,:name,:email,:text)", params);		
 	}
-	//insert value
+
 	public boolean create(Notice notice) {
 		BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(notice);
 		return jdbc.update("insert into notices (name , email, text) values (:name,:email,:text)", params) == 1;
