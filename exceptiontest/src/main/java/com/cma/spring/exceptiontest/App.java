@@ -1,5 +1,6 @@
 package com.cma.spring.exceptiontest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.ApplicationContext;
@@ -20,12 +21,22 @@ public class App {
     	try {
     		//insert notice
     		
-    		Notice notice1 = new Notice(6,"mainul", "mainul@gmail.com", "hi mainul How are you?");
+    		Notice notice1 = new Notice("mainul1", "mainul@gmail.com", "hi mainul How are you?");
+    		Notice notice2 = new Notice("mainul2", "mainul@gmail.com", "hi mainul How are you?");
+    		Notice notice3 = new Notice("mainul3", "mainul@gmail.com", "hi mainul How are you?");
+    		Notice notice4 = new Notice("mainul4", "mainul@gmail.com", "hi mainul How are you?");
     		//noticesDAO.create(notice1);
-    		noticesDAO.update(notice1);
+    		//noticesDAO.update(notice1);
     		
+    		List<Notice> noticeList = new ArrayList<Notice>();
+    		noticeList.add(notice1);
+    		noticeList.add(notice2);
+    		noticeList.add(notice3);
+    		noticeList.add(notice4);
     		
-    		noticesDAO.delete(2); //delete method called
+    		noticesDAO.create(noticeList);
+    		
+    		//noticesDAO.delete(2); //delete method called
     		List<Notice> notices = noticesDAO.getNotices();
     		
         	for(Notice notice: notices) {
