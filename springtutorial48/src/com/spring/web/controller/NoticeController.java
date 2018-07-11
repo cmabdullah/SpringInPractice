@@ -14,8 +14,6 @@ import com.spring.web.service.NoticesService;
 public class NoticeController {// Smart way
 	
 	NoticesService noticesService;
-	
-	
 	@Autowired
 	public void setNoticesService(NoticesService noticesService) {
 		this.noticesService = noticesService;
@@ -24,9 +22,7 @@ public class NoticeController {// Smart way
 	@RequestMapping("/")
 	public String showHome(Model model) {
 		List<Notice> notices = noticesService.getCurrent();
-		
-		
-		
+
 		model.addAttribute("notices", notices );
 		return "home";
 	}
