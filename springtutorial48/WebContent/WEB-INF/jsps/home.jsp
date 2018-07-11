@@ -12,19 +12,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-Request: ${name}<!-- Smart way -->
-<br>
-Request : (Using JSTL) <c:out value="${name}"></c:out><br>
 
-
-
-<sql:query var="rs" dataSource="jdbc/spring">
-select id, name, email, text from notices
-</sql:query>
-
-<c:forEach var="row" items="${rs.rows}">
-    Name: ${row.name}<br/>
-    Email: ${row.email}<br/>
+<c:forEach var="notice" items="${notices}">
+    ID: ${notice.id}<br/>
+    Name: ${notice.name}<br/>
+    Email: ${notice.email}<br/>
+    Text: ${notice.text}<br/>
 </c:forEach>
 </body>
 </html>

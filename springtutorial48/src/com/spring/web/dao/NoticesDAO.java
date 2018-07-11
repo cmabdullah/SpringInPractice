@@ -18,11 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Component("noticesDAO")
 public class NoticesDAO {
 	private NamedParameterJdbcTemplate jdbc;
-	
-	public NoticesDAO() {
-		System.out.println("Beans are configured");
-	}
-	
+//	public NoticesDAO() {//constructor added for debugg purposes
+//		System.out.println("Beans are configured");
+//	}
+
 	@Autowired
 	public void setDataSource(DataSource jdbc) {
 		this.jdbc = new NamedParameterJdbcTemplate(jdbc);
