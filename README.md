@@ -6783,6 +6783,7 @@ public class NoticesDAO {
 
 
 1. context.xml (Tomcat server)
+
 	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
 	maxActive="100" maxIdle="30" maxWait="10000"
 	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
