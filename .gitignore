@@ -1,5 +1,6 @@
 /RemoteSystemsTempFiles/
 /Servers/
+/springtutorial48/target/
 *.db
 *.swp
 *.exe
@@ -12,3 +13,4 @@
 *.settings
 *.class
 *.DS_Store
+
