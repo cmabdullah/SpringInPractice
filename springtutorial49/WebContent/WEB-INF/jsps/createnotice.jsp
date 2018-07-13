@@ -10,17 +10,56 @@
 </head>
 <body>
 <!-- post মেথড হলে url এ parameter দেখা যাবে না  -->
-<div class="container">
-<form method="post" action="${pageContext.request.contextPath}/docreate">
-<table>
-<tr> <td>Name :</td><td><input name = "name" type = "text"/></td>   </tr>
-<tr> <td>Email :</td><td><input name = "email" type = "text"/></td> 
-<tr> <td>Notice :</td><td><textarea rows="10" cols="15" name = "text"></textarea></td> 
-<tr> <td>&nbsp;</td><td><input name = "create query" type = "submit"/></td> 
-</table>
 
+ <div class="col-md-6 col-md-offset-3">
+<form class="form-horizontal"   method="post" action="${pageContext.request.contextPath}/docreate">
+<fieldset>
 
+<!-- Form Name -->
+<legend>Create Notice</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="name">Name :</label>  
+  <div class="col-md-4">
+  <input id="name" name="name" type="text" placeholder="Enter your name" class="form-control input-md">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="email">Email :</label>  
+  <div class="col-md-4">
+  <input id="email" name="email" type="text" placeholder="Enter your email" class="form-control input-md">
+    
+  </div>
+</div>
+
+<!-- Textarea -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="text">Notice :</label>
+  <div class="col-md-4">                     
+    <textarea class="form-control" id="text" name="text"></textarea>
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="submit"></label>
+  <div class="col-md-4">
+    <button id="submit" name="submit" class="btn btn-primary">Create Notice</button>
+  </div>
+</div>
+
+</fieldset>
 </form>
+</div>
+
+
+
+
+
 </div>
 </body>
 </html>

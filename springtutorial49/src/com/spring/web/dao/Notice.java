@@ -1,7 +1,10 @@
 package com.spring.web.dao;
 
+import javax.validation.constraints.Size;
+
 public class Notice {
 	private int id;
+	@Size(min=4  ,max=100)
 	private String name;
 	private String email;
 	private String text;
