@@ -1,12 +1,17 @@
 package com.spring.web.dao;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class Notice {
 	private int id;
-	@Size(min=4  ,max=100)
+	@Size(min=4  ,max=100, message="Name must be between 5 to 100")
 	private String name;
+	@NotNull
+	@Pattern(regexp=".*\\@.*\\..*", message = "Not a valied email address")
 	private String email;
+	@Size(min=20  ,max=250, message="text must be between 20 to 250")
 	private String text;
 	
 	public Notice() {
