@@ -61,10 +61,14 @@ public class NoticeController {// Smart way
 			for (ObjectError error: errors) {
 				System.out.println(error.getDefaultMessage());
 			}
+			
+			
 			return "createnotice";
-		}else {
-			System.out.println("Form is validet");
 		}
+		noticesService.create(notice);
+//		else {
+//			System.out.println("Form is validet");
+//		}
 		return "noticecreated";
 	}
 }

@@ -18,7 +18,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = {com.spring.web.validation.ValidEmailImpl.class })
 public @interface ValidEmail {
 
-	String message() default "Doesnot seem to be a valid email address";
+	String message() default "Does not seem to be a valid email address";
 
 	Class<?>[] groups() default { };
 

@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>notice created</h1>
+<a href="${pageContext.request.contextPath}/notices">Current notices</a><br>
 </body>
 </html>
