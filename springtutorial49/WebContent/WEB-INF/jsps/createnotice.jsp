@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+    
+    <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -12,7 +15,7 @@
 <!-- post মেথড হলে url এ parameter দেখা যাবে না  -->
 
  <div class="col-md-6 col-md-offset-3">
-<form class="form-horizontal"   method="post" action="${pageContext.request.contextPath}/docreate">
+<sf:form class="form-horizontal"   method="post" action="${pageContext.request.contextPath}/docreate" commandName="notice">
 <fieldset>
 
 <!-- Form Name -->
@@ -22,8 +25,10 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="name">Name :</label>  
   <div class="col-md-4">
-  <input id="name" name="name" type="text" placeholder="Enter your name" class="form-control input-md">
-    
+  <!-- Path must be equal to input name -->
+  <sf:input id="name" path="name" name="name"  type="text" placeholder="Enter your name" class="form-control input-md"/>
+    <!-- Show error message into view -->
+    <sf:errors path="name" cssClass="alert-danger"></sf:errors>
   </div>
 </div>
 
@@ -31,8 +36,9 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="email">Email :</label>  
   <div class="col-md-4">
-  <input id="email" name="email" type="text" placeholder="Enter your email" class="form-control input-md">
-    
+  <sf:input id="email" name="email" path="email" type="text" placeholder="Enter your email" class="form-control input-md"/>
+    <!-- Show error message into view -->
+    <sf:errors path="email" cssClass="alert-danger"></sf:errors>    
   </div>
 </div>
 
@@ -40,7 +46,10 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="text">Notice :</label>
   <div class="col-md-4">                     
-    <textarea class="form-control" id="text" name="text"></textarea>
+    <sf:textarea class="form-control" path="text" id="text" name="text" ></sf:textarea>
+     <!-- Show error message into view -->
+    <sf:errors path="text" cssClass="alert-danger"></sf:errors>   
+    
   </div>
 </div>
 
@@ -53,7 +62,7 @@
 </div>
 
 </fieldset>
-</form>
+</sf:form>
 </div>
 
 

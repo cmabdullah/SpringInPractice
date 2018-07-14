@@ -47,7 +47,8 @@ public class NoticeController {// Smart way
 	
 
 	@RequestMapping("/createnotice")
-	public String createNotice() {
+	public String createNotice(Model model) {
+		model.addAttribute(new Notice());
 		return "createnotice";
 	}
 	//notice beans will inject automatically
@@ -60,6 +61,7 @@ public class NoticeController {// Smart way
 			for (ObjectError error: errors) {
 				System.out.println(error.getDefaultMessage());
 			}
+			return "createnotice";
 		}else {
 			System.out.println("Form is validet");
 		}
