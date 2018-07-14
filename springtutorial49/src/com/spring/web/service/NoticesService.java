@@ -21,5 +21,11 @@ public class NoticesService {
 		noticesDAO.create(notice);
 		
 	}
+	
+	// error handle test method
+	public void throwTextException() {
+		noticesDAO.getNotice(132332);
+		
+	}
 
 }
