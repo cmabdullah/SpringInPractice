@@ -13269,3 +13269,53 @@ read context path from page context-->
 ```
 
 
+
+
+
+
+# Lacture 74
+## Objective : Base project for working with Aspects
+
+### App.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
+		Camera camera = (Camera)context.getBean("camera");
+		camera.snap();
+		context.close();
+	}
+}
+
+```
+
+### Camera.java
+
+```java
+package com.spring.aop;
+
+public class Camera {
+	public void snap() {
+		System.out.println("SNAP");
+	}
+}
+
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="camera" class="com.spring.aop.Camera"></bean>
+</beans>
+```
