@@ -13346,9 +13346,6 @@ public class Camera {
 ```
 
 
-
-
-
 # Lacture 75
 ## Objective : A Simple Aspect Example 
 
@@ -13421,3 +13418,108 @@ public class Logger {
 	</aop:config>
 </beans>
 ```
+
+
+
+# Lacture 76
+## Objective : Annotation Based Aspects 
+
+### App.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
+		Camera camera = (Camera)context.getBean("camera");
+		camera.snap();
+		context.close();
+	}
+}
+
+```
+
+### Camera.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Camera {
+	public void snap() {
+		System.out.println("SNAP");
+	}
+}
+```
+
+
+
+### Logger.java
+
+```java
+package com.spring.aop;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Component;
+@Aspect
+@Component
+public class Logger {
+	@Before("execution( void com.spring.aop.Camera.snap())")
+	public void aboutToTakePhoto() {
+		System.out.println("About to take photo");
+	}
+}
+
+```
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+<!-- 
+	<bean id="camera" class="com.spring.aop.Camera"></bean>
+	<bean id="logger" class="com.spring.aop.Logger"></bean> 
+ -->
+
+<!-- 
+	<aop:config>
+		<aop:pointcut
+			expression="execution( void com.spring.aop.Camera.snap())"
+			id="camerasnap" />
+		<aop:aspect ref="logger" id="loggeraspect">
+			<aop:before method="aboutToTakePhoto"
+				pointcut-ref="camerasnap" />
+		</aop:aspect>
+	</aop:config>
+ -->
+ 
+ <!-- 
+ 	<aop:config>
+		
+		<aop:aspect ref="logger" id="loggeraspect">
+			<aop:before method="aboutToTakePhoto"
+				pointcut="execution( void com.spring.aop.Camera.snap())" />
+		</aop:aspect>
+	</aop:config>
+	
+	 -->
+ 	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.aop"></context:component-scan>
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+</beans>
+
+```
+
