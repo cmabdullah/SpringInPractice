@@ -25,7 +25,6 @@ public class NoticesService {
 	// error handle test method
 	public void throwTextException() {
 		noticesDAO.getNotice(132332);
-		
 	}
 
 }
