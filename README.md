@@ -39,6 +39,13 @@
 2. command+space = full line
 3. command+shift+f = rearrange
 
+
+
+- [Awesome Java](#awesome-java)
+    - [Lacture_11_part_1](#Lacture_11_part_1)
+    - [Bean Mapping](#bean-mapping)
+    - [Build](#build)
+
 # Lacture 4
 ## Objective : Define patient class beans
 ### App.java
@@ -720,7 +727,7 @@ public class Address {
 
 
 
-# Lacture 11 part 1
+# Lacture_11_part_1
 ## Objective : Factory Method
 ##### Due to some constructor issue, or sum dependency issue, we want to run program without constructor method, that itme we can use factory method.
 ##### we have to create a factory method, through factory method to beans configuration, we have to take patient beans
@@ -13700,3 +13707,132 @@ public class Lens {
 ```
 
 
+
+# Lacture 78
+## Objective : Advice Types - After, Around, and Others
+
+### App.java
+
+```java
+ package com.spring.aop;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+/***
+Around advice (before)......
+About to take photo
+SNAP
+Around advice ......by by....
+Around advice (after)......
+After advice......
+After Returning......
+ * **/
+public class App {
+
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
+		Camera camera = (Camera)context.getBean("camera");
+		try {
+			camera.snap();
+		} catch (Exception e) {
+			System.out.println(e.getMessage()  );
+		}
+		context.close();
+	}
+}
+```
+
+### Camera.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Camera {
+	public void snap() throws Exception{
+		System.out.println("SNAP");
+		
+		throw new Exception("by by....");
+	}
+}
+```
+
+### Logger.java
+
+```java
+package com.spring.aop;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+@Aspect
+@Component
+public class Logger {
+	@Pointcut("execution( void com.spring.aop.Camera.snap(..))")
+
+	public void cameraSnap() {
+		
+	}
+
+	@Before("cameraSnap()")
+	public void aboutToTakePhoto() {
+		System.out.println("About to take photo");
+	}
+
+	
+	@After("cameraSnap()")
+	public void afterAdvice() {
+		System.out.println("After advice......");
+	}
+	
+	// if method is executed normally
+	@AfterReturning("cameraSnap()")
+	public void afterReturning() {
+		System.out.println("After Returning......");
+	}	
+	
+	@AfterThrowing("cameraSnap()")
+	public void afterThrowing() {
+		System.out.println("After Throwing......");
+	}	
+	
+	@Around("cameraSnap()")
+	public void aroundAdvice(ProceedingJoinPoint p) {
+		System.out.println("Around advice (before)......");
+		
+		try {
+			p.proceed();
+		} catch (Throwable e) {
+			System.out.println("Around advice ......"+e.getMessage());
+		}
+		
+		System.out.println("Around advice (after)......");
+	}	
+}
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+ 	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.aop"></context:component-scan>
+	<context:component-scan base-package="com.spring.aop.accessories"></context:component-scan>	
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+</beans>
+
+```
