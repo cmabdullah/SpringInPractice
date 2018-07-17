@@ -4,10 +4,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.spring.aop.accessories.Lens;
 /***
+*********** Before Demo****************
 SNAP
+*********** Before Demo****************
 SNAP!! with exposer : 2000
+*********** Before Demo****************
 SNAP!! with Photo name : Hi Cm its your campus 
+*********** Before Demo****************
 SNAP!! Night mode .... 
+*********** Before Demo****************
 Zoom lens : 500
 *********** Before Demo****************
 Snapping Car......
