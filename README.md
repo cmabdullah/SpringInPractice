@@ -14143,3 +14143,131 @@ public class Car {
 </beans>
 
 ```
+
+
+
+# Lacture 81
+## Objective : This and Target designators
+
+### App.java
+
+```java
+ package com.spring.aop;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+/***
+*********** Within Demo
+*********** Target Demo
+*********** This Demo
+SNAP
+ * **/
+public class App {
+
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
+		ICamera camera = (ICamera)context.getBean("camera");
+		camera.snap();
+
+		context.close();
+	}
+}
+```
+
+### ICamera.java
+
+```java
+package com.spring.aop;
+
+public interface ICamera {
+
+	void snap();
+
+}
+```
+
+### Camera.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component
+
+public class Camera implements ICamera {
+
+	/* (non-Javadoc)
+	 * @see com.spring.aop.ICamera#snap()
+	 */
+	@Override
+	public void snap(){
+		System.out.println("SNAP");
+	}
+
+}
+```
+
+### Logger.java
+
+```java
+package com.spring.aop;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+@Aspect
+@Component
+public class Logger {
+	@Pointcut("within( com.spring.aop.*)")
+//@Pointcut("within( com.spring.aop.Camera)")
+	public void withinDemo() {
+		
+	}
+
+	@Pointcut("target( com.spring.aop.Camera)")
+	public void targetDemo() {
+			
+	}
+	@Pointcut("this( com.spring.aop.ICamera)")
+	public void thisDemo() {
+			
+	}	
+	@Before("withinDemo()")
+	public void aboutToTakePhoto() {
+		System.out.println("*********** Within Demo");
+	}
+	@Before("targetDemo()")
+	public void targetBeforeDemo() {
+		System.out.println("*********** Target Demo");
+	}
+
+	@Before("thisDemo()")
+	public void thisBeforeDemo() {
+		System.out.println("*********** This Demo");
+	}
+}
+```
+
+
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+ 	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.aop"></context:component-scan>
+	<context:component-scan base-package="com.spring.aop.accessories"></context:component-scan>	
+	<aop:aspectj-autoproxy proxy-target-class="false"></aop:aspectj-autoproxy>
+
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy> -->	
+</beans>
+
+```

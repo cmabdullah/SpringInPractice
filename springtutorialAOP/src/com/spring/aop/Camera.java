@@ -4,21 +4,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 
-public class Camera {
+public class Camera implements ICamera {
 
+	/* (non-Javadoc)
+	 * @see com.spring.aop.ICamera#snap()
+	 */
+	@Override
 	public void snap(){
 		System.out.println("SNAP");
 	}
-	public void snap(int exposer) {
-		System.out.println("SNAP!! with exposer"+exposer);
-	}
 
-	public String snap(String exposer) {
-		System.out.println("SNAP!! with Photo name : "+exposer);
-		return exposer;
-	}
-	
-	public void snapNightTime() {
-		System.out.println("SNAP!! Night mode .... ");
-	}
 }
