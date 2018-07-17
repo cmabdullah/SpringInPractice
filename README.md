@@ -14351,8 +14351,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class Logger {
-	@Pointcut("within( com.spring..*)")
-	//@Pointcut("within( com.spring.aop.Camera)")
+	@Pointcut("within(@org.springframework.stereotype.Component com.spring..*)")
 	public void somePointCut() {
 		
 	}
@@ -14377,6 +14376,343 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Lens {
+	public void zoom(int factor) {
+		System.out.println("Zoom lens : "+factor);
+	}
+}
+```
+
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+ 	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.aop"></context:component-scan>
+	<context:component-scan base-package="com.spring.aop.accessories"></context:component-scan>	
+	<aop:aspectj-autoproxy proxy-target-class="false"></aop:aspectj-autoproxy>
+
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy> -->	
+</beans>
+
+```
+
+
+
+
+# Lacture 81
+## Objective : This and Target designators
+
+### App.java
+
+```java
+ package com.spring.aop;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+/***
+*********** Within Demo
+*********** Target Demo
+*********** This Demo
+SNAP
+ * **/
+public class App {
+
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
+		ICamera camera = (ICamera)context.getBean("camera");
+		camera.snap();
+
+		context.close();
+	}
+}
+```
+
+### ICamera.java
+
+```java
+package com.spring.aop;
+
+public interface ICamera {
+
+	void snap();
+
+}
+```
+
+### Camera.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component
+
+public class Camera implements ICamera {
+
+	/* (non-Javadoc)
+	 * @see com.spring.aop.ICamera#snap()
+	 */
+	@Override
+	public void snap(){
+		System.out.println("SNAP");
+	}
+
+}
+```
+
+### Logger.java
+
+```java
+package com.spring.aop;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+@Aspect
+@Component
+public class Logger {
+	@Pointcut("within( com.spring.aop.*)")
+//@Pointcut("within( com.spring.aop.Camera)")
+	public void withinDemo() {
+		
+	}
+
+	@Pointcut("target( com.spring.aop.Camera)")
+	public void targetDemo() {
+			
+	}
+	@Pointcut("this( com.spring.aop.ICamera)")
+	public void thisDemo() {
+			
+	}	
+	@Before("withinDemo()")
+	public void aboutToTakePhoto() {
+		System.out.println("*********** Within Demo");
+	}
+	@Before("targetDemo()")
+	public void targetBeforeDemo() {
+		System.out.println("*********** Target Demo");
+	}
+
+	@Before("thisDemo()")
+	public void thisBeforeDemo() {
+		System.out.println("*********** This Demo");
+	}
+}
+```
+
+
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+ 	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.aop"></context:component-scan>
+	<context:component-scan base-package="com.spring.aop.accessories"></context:component-scan>	
+	<aop:aspectj-autoproxy proxy-target-class="false"></aop:aspectj-autoproxy>
+
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy> -->	
+</beans>
+
+```
+
+
+
+# Lacture 83
+## Objective : Annotation Specific PCDs
+
+### App.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.spring.aop.accessories.Lens;
+/***
+SNAP
+SNAP!! with exposer : 2000
+SNAP!! with Photo name : Hi Cm its your campus 
+SNAP!! Night mode .... 
+Zoom lens : 500
+*********** Before Demo****************
+Snapping Car......
+ * **/
+public class App {
+
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
+		ICamera camera = (ICamera)context.getBean("camera");
+		Lens lens = (Lens)context.getBean("lens");
+		camera.snap();
+		
+		camera.snap(2000);
+		camera.snap("Hi Cm its your campus ");
+		camera.snapNightTime();
+		lens.zoom(500);
+		
+		Car car = (Car) context.getBean("car");
+		camera.snapCar(car);
+		
+		context.close();
+	}
+}
+```
+
+### ICamera.java
+
+```java
+package com.spring.aop;
+
+public interface ICamera {
+
+	void snap();
+	
+	void snap(int exposer);
+	String snap(String exposer) ;
+	void snapNightTime();
+	void snapCar(Car car);
+}
+```
+
+### Camera.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component
+
+public class Camera implements ICamera {
+
+	/* (non-Javadoc)
+	 * @see com.spring.aop.ICamera#snap()
+	 */
+	@Override
+	@Deprecated
+	public void snap(){
+		System.out.println("SNAP");
+	}
+
+	public void snap(int exposer) {
+		System.out.println("SNAP!! with exposer : "+exposer);
+	}
+
+	public String snap(String exposer) {
+		System.out.println("SNAP!! with Photo name : "+exposer);
+		return exposer;
+	}
+	
+	public void snapNightTime() {
+		System.out.println("SNAP!! Night mode .... ");
+	}
+	
+	public void snapCar(Car car) {
+		System.out.println("Snapping Car......");
+	}
+}
+```
+
+### Logger.java
+
+```java
+package com.spring.aop;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+
+
+@Aspect
+@Component
+public class Logger {
+	//@Pointcut("within(@org.springframework.stereotype.Component com.spring..*)")
+	
+	//only for Deprecated annotation
+	//@Pointcut("within(@Deprecated com.spring..*)")
+	
+	// point all Component annotation.....
+
+
+	
+//	@Pointcut("within(@org.springframework.stereotype.Component com.spring..*)")
+//	//@Pointcut("within( com.spring.aop.Camera)")
+//	public void somePointCut() {	
+//	}
+//	
+//	@Before("somePointCut()")
+//	public void somePointCutPhoto() {
+//		System.out.println("*********** Before Demo****************");
+//	}
+
+	
+	
+//	@Pointcut("@target(org.springframework.stereotype.Component)")
+//	public void somePointCut() {	
+//	}
+//
+//	@Before("somePointCut()")
+//	public void somePointCutPhoto() {
+//		System.out.println("*********** Before Demo****************");
+//	}	
+
+	
+	
+//	@Pointcut("@annotation(java.lang.Deprecated)")
+//	public void somePointCut() {	
+//	}
+//
+//	@Before("somePointCut()")
+//	public void somePointCutPhoto() {
+//		System.out.println("*********** Before Demo****************");
+//	}	
+	
+	
+	@Pointcut("@args(org.springframework.stereotype.Component)")
+	public void somePointCut() {	
+	}
+
+	@Before("somePointCut()")
+	public void somePointCutPhoto() {
+		System.out.println("*********** Before Demo****************");
+	}
+}
+```
+
+
+#### New Package
+
+### Lens.java
+
+```java
+package com.spring.aop.accessories;
+
+import org.springframework.stereotype.Component;
+
+@Component
+@Deprecated
+public class Lens {
+	
+	@Deprecated
 	public void zoom(int factor) {
 		System.out.println("Zoom lens : "+factor);
 	}

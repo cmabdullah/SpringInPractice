@@ -10,8 +10,25 @@ public class Camera implements ICamera {
 	 * @see com.spring.aop.ICamera#snap()
 	 */
 	@Override
+	@Deprecated
 	public void snap(){
 		System.out.println("SNAP");
 	}
 
+	public void snap(int exposer) {
+		System.out.println("SNAP!! with exposer : "+exposer);
+	}
+
+	public String snap(String exposer) {
+		System.out.println("SNAP!! with Photo name : "+exposer);
+		return exposer;
+	}
+	
+	public void snapNightTime() {
+		System.out.println("SNAP!! Night mode .... ");
+	}
+	
+	public void snapCar(Car car) {
+		System.out.println("Snapping Car......");
+	}
 }
