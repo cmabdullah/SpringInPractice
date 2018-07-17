@@ -13836,3 +13836,180 @@ public class Logger {
 </beans>
 
 ```
+
+
+
+
+# Lacture 79
+## Objective : Proxies, Interfaces and Aspects
+
+### App.java
+
+```java
+ package com.spring.aop;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+/***
+Getting object of camera class com.sun.proxy.$Proxy11
+Camera is instance of camera class : true
+Around advice (before)......
+About to take photo
+SNAP
+Around advice ......by by....
+Around advice (after)......
+After advice......
+After Returning......
+ * **/
+public class App {
+
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
+		ICamera camera = (ICamera)context.getBean("camera");
+		//Object camera = context.getBean("camera");
+		System.out.println("Getting object of camera "+camera.getClass());
+		System.out.println("Camera is instance of ICamera class : "+(camera instanceof ICamera));
+		
+		
+		try {
+			camera.snap();
+		} catch (Exception e) {
+			System.out.println(e.getMessage()  );
+		}
+		context.close();
+	}
+}
+```
+
+
+### PhotoSnapper.java
+
+```java
+package com.spring.aop;
+
+public interface PhotoSnapper {
+
+}
+```
+
+### ICamera.java
+
+```java
+package com.spring.aop;
+
+public interface ICamera {
+
+	void snap() throws Exception;
+
+}
+```
+
+
+### Camera.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component
+//public class Camera implements PhotoSnapper{
+public class Camera implements PhotoSnapper, ICamera{
+//	public Camera() {
+//		System.out.println("From Camera constructor.......");
+//	}
+	
+	/* (non-Javadoc)
+	 * @see com.spring.aop.ICamera#snap()
+	 */
+	@Override
+	public void snap() throws Exception{
+		System.out.println("SNAP");
+		throw new Exception("by by....");
+	}
+
+}
+```
+
+### Logger.java
+
+```java
+package com.spring.aop;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+@Aspect
+@Component
+public class Logger {
+	@Pointcut("execution( void com.spring.aop.Camera.snap(..))")
+
+	public void cameraSnap() {
+		
+	}
+
+	@Before("cameraSnap()")
+	public void aboutToTakePhoto() {
+		System.out.println("About to take photo");
+	}
+
+	
+	@After("cameraSnap()")
+	public void afterAdvice() {
+		System.out.println("After advice......");
+	}
+	
+	// if method is executed normally
+	@AfterReturning("cameraSnap()")
+	public void afterReturning() {
+		System.out.println("After Returning......");
+	}	
+	
+	@AfterThrowing("cameraSnap()")
+	public void afterThrowing() {
+		System.out.println("After Throwing......");
+	}	
+	
+	
+	@Around("cameraSnap()")
+	public void aroundAdvice(ProceedingJoinPoint p) {
+		System.out.println("Around advice (before)......");
+		
+		try {
+			p.proceed();
+		} catch (Throwable e) {
+			System.out.println("Around advice ......"+e.getMessage());
+		}
+		
+		System.out.println("Around advice (after)......");
+	}	
+}
+```
+
+
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+ 	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.aop"></context:component-scan>
+	<context:component-scan base-package="com.spring.aop.accessories"></context:component-scan>	
+	<aop:aspectj-autoproxy proxy-target-class="false"></aop:aspectj-autoproxy>
+
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy> -->	
+</beans>
+
+```

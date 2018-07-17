@@ -2,6 +2,8 @@
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 /***
+Getting object of camera class com.sun.proxy.$Proxy11
+Camera is instance of camera class : true
 Around advice (before)......
 About to take photo
 SNAP
@@ -14,7 +16,12 @@ public class App {
 
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
-		Camera camera = (Camera)context.getBean("camera");
+		ICamera camera = (ICamera)context.getBean("camera");
+		//Object camera = context.getBean("camera");
+		System.out.println("Getting object of camera "+camera.getClass());
+		System.out.println("Camera is instance of ICamera class : "+(camera instanceof ICamera));
+		
+		
 		try {
 			camera.snap();
 		} catch (Exception e) {
