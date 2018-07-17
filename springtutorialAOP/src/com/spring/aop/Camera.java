@@ -3,19 +3,22 @@ package com.spring.aop;
 import org.springframework.stereotype.Component;
 
 @Component
-//public class Camera implements PhotoSnapper{
-public class Camera implements PhotoSnapper, ICamera{
-//	public Camera() {
-//		System.out.println("From Camera constructor.......");
-//	}
-	
-	/* (non-Javadoc)
-	 * @see com.spring.aop.ICamera#snap()
-	 */
-	@Override
-	public void snap() throws Exception{
+
+public class Camera {
+
+	public void snap(){
 		System.out.println("SNAP");
-		throw new Exception("by by....");
+	}
+	public void snap(int exposer) {
+		System.out.println("SNAP!! with exposer"+exposer);
 	}
 
+	public String snap(String exposer) {
+		System.out.println("SNAP!! with Photo name : "+exposer);
+		return exposer;
+	}
+	
+	public void snapNightTime() {
+		System.out.println("SNAP!! Night mode .... ");
+	}
 }

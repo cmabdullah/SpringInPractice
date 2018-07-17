@@ -14013,3 +14013,133 @@ public class Logger {
 </beans>
 
 ```
+
+
+
+# Lacture 80
+## Objective : Within Pointcut Designator
+
+### App.java
+
+```java
+ package com.spring.aop;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+/***
+Before advice
+SNAP
+Before advice
+SNAP!! with exposer2000
+Before advice
+SNAP!! with Photo name : Hi Cm its your campus 
+Before advice
+Car engine started......
+ * **/
+public class App {
+
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
+		Camera camera = (Camera)context.getBean("camera");
+		Car car = (Car) context.getBean("car");
+		camera.snap();
+		camera.snap(2000);
+		camera.snap("Hi Cm its your campus ");
+		
+		car.start();
+		context.close();
+	}
+}
+```
+
+### Camera.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component
+
+public class Camera {
+
+	public void snap(){
+		System.out.println("SNAP");
+	}
+	public void snap(int exposer) {
+		System.out.println("SNAP!! with exposer"+exposer);
+	}
+
+	public String snap(String exposer) {
+		System.out.println("SNAP!! with Photo name : "+exposer);
+		return exposer;
+	}
+	
+	public void snapNightTime() {
+		System.out.println("SNAP!! Night mode .... ");
+	}
+}
+```
+
+### Logger.java
+
+```java
+package com.spring.aop;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+@Aspect
+@Component
+public class Logger {
+	@Pointcut("within( com.spring.aop.*)")
+//@Pointcut("within( com.spring.aop.Camera)")
+	public void cameraSnap() {
+		
+	}
+
+	@Before("cameraSnap()")
+	public void aboutToTakePhoto() {
+		System.out.println("Before advice");
+	}
+
+}
+```
+
+
+### Car.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Car {
+	public void start() {
+		System.out.println("Car engine started......");
+	}
+
+}
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+ 	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.aop"></context:component-scan>
+	<context:component-scan base-package="com.spring.aop.accessories"></context:component-scan>	
+	<aop:aspectj-autoproxy proxy-target-class="false"></aop:aspectj-autoproxy>
+
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy> -->	
+</beans>
+
+```
