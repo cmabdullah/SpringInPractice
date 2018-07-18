@@ -16580,8 +16580,8 @@ read context path from page context-->
 
 
 
-# Lacture 91-92
-## Objective : Adding Spring Security Filter with login form
+# Lacture 91-93
+## Objective : Adding Spring Security Filter, login form, static resources
 
 
 
@@ -17298,6 +17298,8 @@ read context path from page context-->
 		<security:form-login />
 		<security:intercept-url pattern="/" access="permitAll" />
 		<security:intercept-url pattern="/notices" access="permitAll" />
+		<!--Permit all static resources like bootstrup library and so one...-->
+		<security:intercept-url pattern="/static/**" access="permitAll" />
 		<security:intercept-url pattern="/createnotice" access="isAuthenticated()" />
 		<security:intercept-url pattern="/docreate" access="isAuthenticated()" />
 		<security:intercept-url pattern="/**" access="denyAll" />
