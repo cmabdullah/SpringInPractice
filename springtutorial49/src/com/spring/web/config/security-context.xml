@@ -18,7 +18,8 @@
 	</security:authentication-manager>
 	
 	<security:http use-expressions="true">
-		<security:form-login login-page="/login" />
+		<security:form-login login-page="/login"
+			authentication-failure-url="/login?error=true" />
 		<security:intercept-url pattern="/" access="permitAll" />
 		<security:intercept-url pattern="/static/**" access="permitAll" />
 		<security:intercept-url pattern="/notices" access="permitAll" />

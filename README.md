@@ -17385,8 +17385,8 @@ read context path from page context-->
 
 
 
-# Lacture 94
-## Objective : Customizing the Login Form
+# Lacture 94-95
+## Objective : Customizing the Login Form and Displaying Login Errors
 
 1. context.xml (Tomcat server)
 
@@ -18007,6 +18007,8 @@ read context path from page context-->
 ```java
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<!--Added C namespace-->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
@@ -18043,6 +18045,13 @@ read context path from page context-->
 							placeholder="" class="form-control input-md">
 					</div>
 				</div>
+				<!--Username password incorrect alart-->
+				</div>
+				<div class="alert-danger">
+					<c:if test="${param.error != null }">
+						incorrect username or password
+					</c:if>
+				</div>				
 				<!-- Button -->
 				<div class="form-group">
 					<label class="col-md-4 control-label" for="submit"></label>
@@ -18155,7 +18164,8 @@ read context path from page context-->
 	<security:http use-expressions="true">
 		<security:form-login />
 		<!--change default spring login path-->
-		<security:form-login login-page="/login" />
+		<security:form-login login-page="/login"
+			authentication-failure-url="/login?error=true" />
 		<security:intercept-url pattern="/" access="permitAll" />
 		<security:intercept-url pattern="/notices" access="permitAll" />
 		<!--Permit all static resources like bootstrup library and so one...-->
