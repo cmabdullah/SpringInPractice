@@ -2,35 +2,27 @@
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 /***
-SNAP
-*********** after advice running****************
-SNAP!! with exposer : 2000
-SNAP!! with exposer : 1.8
-*********** Before Demo****************
-exposure : 500 ,aperture : 1.800000
-SNAP!! with exposer : 500 apature1.8
-SNAP!! with Photo name : Hi Cm its your campus 
-SNAP!! Night mode .... 
-Car engine started......
-Snapping Car......
+Machine Starting.....
+Running....
+Blending........
+Completed....
+Machine Starting.....
+Running....
+Fan is activate at level : 5
+Completed....
  * **/
 public class App {
 
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
-		ICamera camera = (ICamera)context.getBean("camera");
-
-		camera.snap();
-		camera.snap(2000);
-		camera.snap(1.8);
-		camera.snap(500, 1.8);
-		camera.snap("Hi Cm its your campus ");
-		camera.snapNightTime();
-
+		IBlender blender = (IBlender)context.getBean("blender");
 		
-		Car car = (Car) context.getBean("car");
-		car.start();
-		camera.snapCar(new Car());
+		((IMachine)blender).start();
+		blender.blend();
+		
+		IFan fan = (IFan)context.getBean("fan");
+		((IMachine)fan).start();
+		fan.activate(5);
 		
 		context.close();
 	}

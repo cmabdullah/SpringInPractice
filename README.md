@@ -15665,3 +15665,175 @@ public class Logger {
 </beans>
 
 ```
+
+
+# Lacture 89
+## Objective : Adding functionality with Aspect
+
+### App.java
+
+```java
+ package com.spring.aop;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+/***
+Machine Starting.....
+Running....
+Blending........
+Completed....
+Machine Starting.....
+Running....
+Fan is activate at level : 5
+Completed....
+ * **/
+public class App {
+
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
+		IBlender blender = (IBlender)context.getBean("blender");
+		
+		((IMachine)blender).start();
+		blender.blend();
+		
+		IFan fan = (IFan)context.getBean("fan");
+		((IMachine)fan).start();
+		fan.activate(5);
+		
+		context.close();
+	}
+}
+```
+
+### IMachine.java
+
+```java
+package com.spring.aop;
+
+public interface IMachine {
+	public void start();
+
+}
+```
+
+### IBlender.java
+
+```java
+package com.spring.aop;
+
+public interface IBlender {
+	public void blend();
+
+}
+```
+### IFan.java
+
+```java
+package com.spring.aop;
+
+public interface IFan {
+
+	void activate(int level);
+
+}
+```
+### Machine.java
+
+```java
+package com.spring.aop;
+
+public class Machine implements IMachine{
+
+	@Override
+	public void start() {
+		System.out.println("Machine Starting.....");	
+	}
+}
+```
+
+### Blender.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Blender implements IBlender {
+
+	@Override
+	public void blend() {
+		System.out.println("Blending........");	
+	}
+}
+```
+### Fan.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Fan implements IFan {
+	/* (non-Javadoc)
+	 * @see com.spring.aop.IFan#activate(int)
+	 */
+	@Override
+	public void activate(int level) {
+		System.out.println("Fan is activate at level : "+level);	
+	}
+}
+```
+### MachineAspect.java
+
+```java
+package com.spring.aop;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.DeclareParents;
+import org.springframework.stereotype.Component;
+
+
+@Component
+@Aspect
+public class MachineAspect {
+	
+	@DeclareParents(value="com.spring.aop.*", defaultImpl = com.spring.aop.Machine.class)
+	private IMachine machine;
+	
+	@Around("within(com.spring.aop.*)")
+	public void runMachine(ProceedingJoinPoint jp) {
+		System.out.println("Running....");
+		try {
+			jp.proceed();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Completed....");
+	}
+}
+```
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+ 	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.aop"></context:component-scan>
+	<context:component-scan base-package="com.spring.aop.accessories"></context:component-scan>	
+	<aop:aspectj-autoproxy proxy-target-class="false"></aop:aspectj-autoproxy>
+
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy> -->	
+</beans>
+
+```
