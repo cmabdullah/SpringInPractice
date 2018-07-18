@@ -15321,3 +15321,171 @@ public class Lens {
 </beans>
 
 ```
+
+
+
+# Lacture 87
+## Objective : Getting Arguments using Args 
+
+### App.java
+
+```java
+ package com.spring.aop;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.spring.aop.accessories.Lens;
+/***
+SNAP
+SNAP!! with exposer : 2000
+SNAP!! with exposer : 1.8
+*********** Before Demo****************
+exposure : 500 ,aperture : 1.800000
+SNAP!! with exposer : 500 apature1.8
+SNAP!! with Photo name : Hi Cm its your campus 
+SNAP!! Night mode .... 
+Car engine started......
+Snapping Car......
+ * **/
+public class App {
+
+	public static void main(String[] args) {
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/spring/aop/beans.xml");
+		ICamera camera = (ICamera)context.getBean("camera");
+
+		camera.snap();
+		camera.snap(2000);
+		camera.snap(1.8);
+		camera.snap(500, 1.8);
+		camera.snap("Hi Cm its your campus ");
+		camera.snapNightTime();
+
+		
+		Car car = (Car) context.getBean("car");
+		car.start();
+		camera.snapCar(new Car());
+		
+		context.close();
+	}
+}
+```
+
+### ICamera.java
+
+```java
+package com.spring.aop;
+
+public interface ICamera {
+
+	public abstract void snap();
+	public abstract void snap(int exposer);
+	public abstract String snap(String exposer) ;
+	public abstract void snapNightTime();
+	public abstract void snapCar(Car car);
+	public abstract void snap(double d);
+	public abstract void snap(int i, double d);
+}
+```
+
+### Camera.java
+
+```java
+package com.spring.aop;
+
+import org.springframework.stereotype.Component;
+
+@Component("camera")
+
+public class Camera implements ICamera {
+
+	/* (non-Javadoc)
+	 * @see com.spring.aop.ICamera#snap()
+	 */
+	@Override
+	@Deprecated
+	public void snap(){
+		System.out.println("SNAP");
+	}
+
+	public void snap(int exposer) {
+		System.out.println("SNAP!! with exposer : "+exposer);
+	}
+
+	public String snap(String exposer) {
+		System.out.println("SNAP!! with Photo name : "+exposer);
+		return exposer;
+	}
+	
+	public void snapNightTime() {
+		System.out.println("SNAP!! Night mode .... ");
+	}
+	
+	public void snapCar(Car car) {
+		System.out.println("Snapping Car......");
+	}
+
+	@Override
+	public void snap(double exposer) {
+		System.out.println("SNAP!! with exposer : "+exposer);
+		
+	}
+
+	@Override
+	public void snap(int i, double d) {
+		System.out.println("SNAP!! with exposer : "+i+" apature"+d);
+		
+	}
+}
+```
+
+### Logger.java
+
+```java
+package com.spring.aop;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+
+
+@Aspect
+@Component
+public class Logger {
+
+	@Pointcut("args(exposure ,aperture)")
+	public void somePointCut(int exposure ,double aperture) {	
+	}
+	
+	@Before("somePointCut(exposure ,aperture)")
+	public void somePointCutPhoto(int exposure ,double aperture) {
+		System.out.println("*********** Before Demo****************");
+		System.out.printf("exposure : %d ,aperture : %f\n", exposure ,aperture);
+
+	}	
+
+}
+```
+
+
+### beans.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+ 	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.aop"></context:component-scan>
+	<context:component-scan base-package="com.spring.aop.accessories"></context:component-scan>	
+	<aop:aspectj-autoproxy proxy-target-class="false"></aop:aspectj-autoproxy>
+
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy> -->	
+</beans>
+
+```

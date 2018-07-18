@@ -1,29 +1,16 @@
  package com.spring.aop;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.spring.aop.accessories.Lens;
 /***
-*********** Before Demo****************
 SNAP
-*********** Before Demo****************
-Args :2000
 SNAP!! with exposer : 2000
-*********** Before Demo****************
-Args :1.8
 SNAP!! with exposer : 1.8
 *********** Before Demo****************
-Args :500
-Args :1.8
+exposure : 500 ,aperture : 1.800000
 SNAP!! with exposer : 500 apature1.8
-*********** Before Demo****************
-Args :Hi Cm its your campus 
 SNAP!! with Photo name : Hi Cm its your campus 
-*********** Before Demo****************
 SNAP!! Night mode .... 
 Car engine started......
-*********** Before Demo****************
-Args :com.spring.aop.Car@48aaecc3
 Snapping Car......
  * **/
 public class App {
