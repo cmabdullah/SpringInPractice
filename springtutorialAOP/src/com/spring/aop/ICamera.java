@@ -2,10 +2,11 @@ package com.spring.aop;
 
 public interface ICamera {
 
-	void snap();
-	
-	void snap(int exposer);
-	String snap(String exposer) ;
-	void snapNightTime();
-	void snapCar(Car car);
+	public abstract void snap();
+	public abstract void snap(int exposer);
+	public abstract String snap(String exposer) ;
+	public abstract void snapNightTime();
+	public abstract void snapCar(Car car);
+	public abstract void snap(double d);
+	public abstract void snap(int i, double d);
 }

@@ -31,4 +31,16 @@ public class Camera implements ICamera {
 	public void snapCar(Car car) {
 		System.out.println("Snapping Car......");
 	}
+
+	@Override
+	public void snap(double exposer) {
+		System.out.println("SNAP!! with exposer : "+exposer);
+		
+	}
+
+	@Override
+	public void snap(int i, double d) {
+		System.out.println("SNAP!! with exposer : "+i+" apature"+d);
+		
+	}
 }
