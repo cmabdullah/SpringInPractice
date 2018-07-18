@@ -1,6 +1,6 @@
 package com.spring.aop;
 
-import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -14,12 +14,21 @@ public class Logger {
 	@Pointcut("args(exposure ,aperture)")
 	public void somePointCut(int exposure ,double aperture) {	
 	}
+	@Pointcut("target(com.spring.aop.Camera)")
+	public void targetCamera() {	
+	}
 	
-	@Before("somePointCut(exposure ,aperture)")
+	
+	// object within camera class with two parameter
+	@Before("targetCamera() && somePointCut(exposure ,aperture)")
 	public void somePointCutPhoto(int exposure ,double aperture) {
 		System.out.println("*********** Before Demo****************");
 		System.out.printf("exposure : %d ,aperture : %f\n", exposure ,aperture);
-
-	}	
+	}
+	@After("within(com.spring.aop.*) && @annotation(Deprecated)")
+	public void someAfterdvice() {
+		System.out.println("*********** after advice running****************");
+	}
+	
 
 }

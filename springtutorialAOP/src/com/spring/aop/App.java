@@ -3,6 +3,7 @@
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 /***
 SNAP
+*********** after advice running****************
 SNAP!! with exposer : 2000
 SNAP!! with exposer : 1.8
 *********** Before Demo****************
