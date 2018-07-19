@@ -38,7 +38,7 @@ public class LoginController {
 	public String doCreate(@Valid User user, BindingResult result) {
 		System.out.println(user);
 		if (result.hasErrors()) {
-			return "createaccount";
+			return "newaccount";
 		}
 		user.setAuthority("user");
 		user.setEnabled(true);

@@ -18,7 +18,7 @@
 <legend>Create User</legend>
 <!-- Text input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="name">Username : </label>  
+  <label class="col-md-4 control-label" for="username">Username : </label>  
   <div class="col-md-4">
   <!-- Path must be equal to input name -->
   <sf:input id="username" path="username" name="username"  type="text" placeholder="Enter your username" class="form-control input-md"/>
@@ -40,15 +40,16 @@
 
 <!-- Password input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="email">Password :</label>  
+  <label class="col-md-4 control-label" for="password">Password :</label>  
   <div class="col-md-4">
   <sf:input id="password" name="password" path="password" type="text" class="form-control input-md"/>
+  <sf:errors path="password" cssClass="alert-danger"></sf:errors> 
   </div>
 </div>
 
 <!--Conform Password input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="email">Confirm Password :</label>  
+  <label class="col-md-4 control-label" for="confirmpassword">Confirm Password :</label>  
   <div class="col-md-4">
   <input id="confirmpassword" name="confirmpassword"  type="text" class="form-control input-md"/>
   </div>
