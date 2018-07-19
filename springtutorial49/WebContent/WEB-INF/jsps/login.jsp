@@ -45,15 +45,11 @@
 
 					</div>
 				</div>
-				
 				<div class="alert-danger">
-				 
 					<c:if test="${param.error != null }">
 						incorrect username or password
 					</c:if>
-				
 				</div>
-
 				<!-- Button -->
 				<div class="form-group">
 					<label class="col-md-4 control-label" for="submit"></label>
