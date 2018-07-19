@@ -60,6 +60,7 @@
 
 			</fieldset>
 		</form>
+		<p><a href="<c:url value='/newaccount'/>">create new Account</a> </p>
 	</div>
 </body>
 </html>

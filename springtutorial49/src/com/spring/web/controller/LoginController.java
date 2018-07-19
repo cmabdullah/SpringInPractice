@@ -1,7 +1,10 @@
 package com.spring.web.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.spring.web.dao.User;
 
 @Controller
 public class LoginController {
@@ -9,4 +12,15 @@ public class LoginController {
 	public String showLogin() {
 		return "login";
 	}
+	
+	@RequestMapping("/newaccount")
+	public String showNewAccount(Model model) {
+		model.addAttribute("user",new User());
+		return "newaccount";
+	}
+	
+	@RequestMapping("/createaccount")
+	public String createAccount() {
+		return "accountcreated";
+	}	
 }
