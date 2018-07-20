@@ -29,7 +29,9 @@
 		<security:intercept-url pattern="/static/**" access="permitAll" />
 		<security:intercept-url pattern="/notices" access="permitAll" />
 		<security:intercept-url pattern="/login" access="permitAll" />
-
+		
+		<security:intercept-url pattern="/loggedout" access="permitAll" />
+		
 		<security:intercept-url pattern="/newaccount" access="permitAll" />
 		<security:intercept-url pattern="/createaccount" access="permitAll" />
 		<security:intercept-url pattern="/accountcreated" access="permitAll" />
@@ -37,5 +39,6 @@
 		<security:intercept-url pattern="/createnotice" access="isAuthenticated()" />
 		<security:intercept-url pattern="/docreate" access="isAuthenticated()" />
 		<security:intercept-url pattern="/**" access="denyAll" />
+		<security:logout logout-success-url="/loggedout" />
 	</security:http>
 </beans>
