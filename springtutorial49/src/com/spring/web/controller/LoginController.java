@@ -3,6 +3,7 @@ package com.spring.web.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,7 +43,23 @@ public class LoginController {
 		}
 		user.setAuthority("user");
 		user.setEnabled(true);
-		usersService.create(user);
+		
+		
+		if (usersService.exists(user.getUsername())) {
+			result.rejectValue("username", "DuplicateKey.user.username", "this username already exist, please choose different username");
+			return "newaccount";
+		}
+		
+		try {
+			usersService.create(user);
+		}catch(DuplicateKeyException e) {
+			result.rejectValue("username", "DuplicateKey.user.username", "this username already exist");
+			return "newaccount";
+		}
+		
+		
+		
+		
 		return "accountcreated";
 	}	
 	
