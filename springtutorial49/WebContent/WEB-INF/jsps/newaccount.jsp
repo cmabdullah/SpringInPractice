@@ -66,5 +66,32 @@
 </fieldset>
 </sf:form>
 </div>
+<script>
+    var password1 = document.getElementById('password');
+    var password2 = document.getElementById('confirmpassword');
+
+    var checkPasswordValidity = function() {
+        if (password1.value != password2.value) {
+            password1.setCustomValidity('Passwords must match.');
+        } else {
+            password1.setCustomValidity('');
+        }        
+    };
+
+    password1.addEventListener('change', checkPasswordValidity, false);
+    password2.addEventListener('change', checkPasswordValidity, false);
+	/***commandName="user"***/
+    var form = document.getElementById('user');
+    form.addEventListener('submit', function() {
+        checkPasswordValidity();
+        if (!this.checkValidity()) {
+            event.preventDefault();
+            //Implement you own means of displaying error messages to the user here.
+            password1.focus();
+        }
+    }, false);
+</script>
+
+
 </body>
 </html>
