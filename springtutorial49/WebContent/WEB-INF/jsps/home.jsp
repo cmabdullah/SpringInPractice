@@ -17,6 +17,12 @@
 <a href="${pageContext.request.contextPath}/notices">Show Current notices</a><br>
 <a href="${pageContext.request.contextPath}/createnotice">Create notices</a>
 <a href="<c:url value='/j_spring_security_logout'/>">Log Out</a>
+
+<a href="<c:url value='/admin'/>">Admin Page</a>
+
+
+
+
 </body>
 </html>
 
