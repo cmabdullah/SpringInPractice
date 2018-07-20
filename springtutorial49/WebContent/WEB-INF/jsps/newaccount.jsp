@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -10,6 +11,7 @@
 <link href="${pageContext.request.contextPath}/static/lib/bootstrap/css/bootstrap.css" rel='stylesheet' type="text/css" />
 </head>
 <body>
+
 <!-- post মেথড হলে url এ parameter দেখা যাবে না  -->
  <div class="col-md-6 col-md-offset-3">
 <sf:form class="form-horizontal"   method="post" action="${pageContext.request.contextPath}/createaccount" commandName="user">
@@ -72,7 +74,7 @@
 
     var checkPasswordValidity = function() {
         if (password1.value != password2.value) {
-            password1.setCustomValidity('Passwords must match.');
+            password1.setCustomValidity("<fmt:message key='UnmatchedPasswords.user.password'/>");
         } else {
             password1.setCustomValidity('');
         }        
