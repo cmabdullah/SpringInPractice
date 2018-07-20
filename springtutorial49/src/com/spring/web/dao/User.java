@@ -9,7 +9,7 @@ import com.spring.web.validation.ValidEmail;
 
 public class User {
 	@NotBlank(message="username cannot be blank")
-	@Size(min=4  ,max=15, message="User Name must be between 4 to 15 long")
+	@Size(min=4  ,max=15)
 	@Pattern(regexp="^\\w{4,}$",message="Username only consist number letter underscore")
 	private String username;
 	@NotBlank(message="Password cannot be blank.....")
@@ -17,7 +17,7 @@ public class User {
 	@Pattern(regexp="^\\S+$",message="Password cannot contain any space")	
 	private String password;
 	
-	@ValidEmail(message="this doesnot seems valid email")
+	@ValidEmail
 	private String email;
 	private boolean enabled;
 	private String authority;

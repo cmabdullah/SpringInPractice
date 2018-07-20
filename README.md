@@ -22431,3 +22431,1140 @@ Your account has been created.......
 
 </web-app>
 ```
+
+
+# Lacture 100
+## Objective : Dealing with Duplicate Usernames
+
+1. context.xml (Tomcat server)
+
+
+		<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
+		maxActive="100" maxIdle="30" maxWait="10000"
+		username="root" password="rootcm" driverClassName="com.mysql.cj.jdbc.Driver"
+		url="jdbc:mysql://localhost:3306/springtutorial?useSSL=false"/>
+
+
+# package name com.spring.web.controller
+
+### HomeController.java
+
+```java
+package com.spring.web.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+@Controller
+public class HomeController {
+	@RequestMapping("/")
+	public String showHome() {
+		return "home";
+	}
+}
+```
+
+### NoticeController.java
+
+```java
+package com.spring.web.controller;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.spring.web.dao.Notice;
+import com.spring.web.service.NoticesService;
+
+@Controller
+public class NoticeController {// Smart way
+	
+	NoticesService noticesService;
+	@Autowired
+	public void setNoticesService(NoticesService noticesService) {
+		this.noticesService = noticesService;
+	}
+
+	//http://localhost:8081/notices/test?id=100
+	//Getting URL Parameters
+	@RequestMapping("/test")
+	public String showTest(Model model , @RequestParam("id")String id) {
+		System.out.println("ID is : "+id);
+		return "home";
+	}	
+	
+//	@ExceptionHandler(DataAccessException.class)
+//	public String handleDatabaseException(DataAccessException ex) {
+//		return "error";
+//	}
+	
+	@RequestMapping("/notices")
+	public String showNotice(Model model) {
+		
+		//if throw exception it will be handled by Database error Handler
+		//noticesService.throwTextException();
+		List<Notice> notices = noticesService.getCurrent();
+
+		model.addAttribute("notices", notices );
+		return "notices";
+	}
+	@RequestMapping("/createnotice")
+	public String createNotice(Model model) {
+		model.addAttribute(new Notice());
+		return "createnotice";
+	}
+	//notice beans will inject automatically
+	@RequestMapping(value = "/docreate", method=RequestMethod.POST)
+	public String doCreate(Model model,@Valid Notice notice, BindingResult result) {
+		System.out.println(notice);
+		
+		if (result.hasErrors()) {
+			List<ObjectError> errors = result.getAllErrors();
+			for (ObjectError error: errors) {
+				System.out.println(error.getDefaultMessage());
+			}
+			return "createnotice";
+		}
+		noticesService.create(notice);
+//		else {
+//			System.out.println("Form is validet");
+//		}
+		return "noticecreated";
+	}
+}
+```
+
+
+### DatabaseErrorHandler.java
+
+```java
+package com.spring.web.controller;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+@ControllerAdvice
+public class DatabaseErrorHandler {
+	@ExceptionHandler(DataAccessException.class)
+	public String handleDatabaseException(DataAccessException ex) {
+		return "error";
+	}
+}
+
+```
+
+### LoginController.java
+
+```java
+package com.spring.web.controller;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.spring.web.dao.User;
+import com.spring.web.service.UsersService;
+
+@Controller
+public class LoginController {
+	
+	
+	UsersService usersService;
+	@Autowired
+	public void setUsersService(UsersService usersService) {
+		this.usersService = usersService;
+	}
+
+	@RequestMapping("/login")
+	public String showLogin() {
+		return "login";
+	}
+	
+	@RequestMapping("/newaccount")
+	public String showNewAccount(Model model) {
+		model.addAttribute("user",new User());
+		return "newaccount";
+	}
+	
+	
+	@RequestMapping(value = "/createaccount", method=RequestMethod.POST)
+	public String doCreate(@Valid User user, BindingResult result) {
+		System.out.println(user);
+		if (result.hasErrors()) {
+			return "newaccount";
+		}
+		user.setAuthority("user");
+		user.setEnabled(true);
+		
+		
+		if (usersService.exists(user.getUsername())) {
+			result.rejectValue("username", "DuplicateKey.user.username", "this username already exist, please choose different username");
+			return "newaccount";
+		}
+		
+//		try {
+//			usersService.create(user);
+//		}catch(DuplicateKeyException e) {
+//			result.rejectValue("username", "DuplicateKey.user.username", "this username already exist");
+//			return "newaccount";
+//		}
+		return "accountcreated";
+	}		
+}
+```
+
+# Package name com.spring.web.dao
+
+### Notice.java
+
+```java
+package com.spring.web.dao;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+//this package created by us for valid email annotation
+import com.spring.web.validation.ValidEmail;
+
+public class Notice {
+	private int id;
+	@Size(min=4  ,max=100, message="Name must be between 5 to 100")
+	private String name;
+	@NotNull
+	//@Pattern(regexp=".*\\@.*\\..*", message = "Not a valied email address")
+	// ValideEmail Annotation created by us, see import com.spring.web.validation.ValidEmail; package
+	@ValidEmail
+	private String email;
+	@Size(min=20  ,max=250, message="text must be between 20 to 250")
+	private String text;
+	
+	public Notice() {
+
+	}	
+	
+	public Notice(String name, String email, String text) {
+		this.name = name;
+		this.email = email;
+		this.text = text;
+	}	
+	
+	public Notice(int id, String name, String email, String text) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.text = text;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	@Override
+	public String toString() {
+		return "Notice [id=" + id + ", name=" + name + ", email=" + email + ", text=" + text + "]";
+	}
+	
+}
+```
+
+### NoticesDAO.java
+
+```java
+package com.spring.web.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+@Component("noticesDAO")
+public class NoticesDAO {
+	private NamedParameterJdbcTemplate jdbc;
+	public NoticesDAO() {//constructor added for debugg purposes
+		System.out.println("Beans are configured");
+	}	
+	@Autowired
+	public void setDataSource(DataSource jdbc) {
+		this.jdbc = new NamedParameterJdbcTemplate(jdbc);
+	}
+	public List<Notice> getNotices(){
+		
+		return jdbc.query("select * from notices", new RowMapper<Notice>() {
+			public Notice mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Notice notice = new Notice();
+				notice.setId(rs.getInt("id"));
+				notice.setName(rs.getString("name"));
+				notice.setEmail(rs.getString("email"));
+				notice.setText(rs.getString("text"));
+				return notice;
+			}
+		});
+	}
+	
+	public boolean delete(int id) { // delete method
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("id", id);
+		return jdbc.update("delete from notices where id = :id", params ) == 1 ; // return true if success
+	}
+	
+	@Transactional
+	public int[] create(List<Notice> notices) {
+		SqlParameterSource[] params =  SqlParameterSourceUtils.createBatch(notices.toArray());
+		return jdbc.batchUpdate("insert into notices (id,name , email, text) values (:id,:name,:email,:text)", params);		
+	}
+
+	public boolean create(Notice notice) {
+		BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(notice);
+		return jdbc.update("insert into notices (name , email, text) values (:name,:email,:text)", params) == 1;
+	}
+	
+	public boolean update(Notice notice) {
+		BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(notice);
+		return jdbc.update("update notices set name=:name,email=:email,text=:text where id=:id", params) == 1;
+	}
+	
+	public Notice getNotice(int id){
+		//কোন অর্ডার ফলো করতে হয় না।
+		//MapSqlParameterSource params = new MapSqlParameterSource("name", "cm");
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("id", id);
+		//return jdbc.query("select * from notices where name = 'cm'", new RowMapper<Notice>() {
+		return jdbc.queryForObject("select * from notices where id = :id", params, new RowMapper<Notice>() {
+			public Notice mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Notice notice = new Notice();
+				notice.setId(rs.getInt("id"));
+				notice.setName(rs.getString("name"));
+				notice.setEmail(rs.getString("email"));
+				notice.setText(rs.getString("text"));
+				return notice;// return single object
+			}
+		});
+	}
+}
+```
+
+
+### User.java
+
+```java
+package com.spring.web.dao;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
+
+import com.spring.web.validation.ValidEmail;
+
+public class User {
+	//user form validation added
+	@NotBlank(message="username cannot be blank")
+	@Size(min=4  ,max=15)
+	@Pattern(regexp="^\\w{4,}$",message="Username only consist number letter underscore")
+	private String username;
+	@NotBlank(message="Password cannot be blank.....")
+	@Size(min=8  ,max=15, message="Password must be between 8 to 15 long")
+	@Pattern(regexp="^\\S+$",message="Password cannot contain any space")	
+	private String password;
+	
+	@ValidEmail
+	private String email;
+	private boolean enabled;
+	private String authority;
+	
+	public User() {
+		
+	}
+
+	public User(String username, String password, String email, boolean enabled, String authority) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.enabled = enabled;
+		this.authority = authority;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public boolean getEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	public String getAuthority() {
+		return authority;
+	}
+	public void setAuthority(String authority) {
+		this.authority = authority;
+	}
+
+}
+```
+
+### UserDao.java
+
+```java
+package com.spring.web.dao;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+@Component("userDao")
+public class UserDao {
+	private NamedParameterJdbcTemplate jdbc;
+	
+	@Autowired
+	public void setDataSource(DataSource jdbc) {
+		this.jdbc = new NamedParameterJdbcTemplate(jdbc);
+	}
+	@Transactional
+	public boolean create(User user) {
+		BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(user);
+		jdbc.update("insert into users (username,password , email, enabled) values (:username,:password,:email,:enabled)", params);
+		return jdbc.update("insert into authorities (username , authority) values (:username,:authority)", params) == 1;
+	}
+	public boolean exists(String username) {
+		return jdbc.queryForObject("select count(*) from users where username=:username", new MapSqlParameterSource("username",username), Integer.class) > 0 ;
+	}
+}
+```
+
+
+## package name com.spring.web.service
+
+### NoticesService.java
+
+```java
+package com.spring.web.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.spring.web.dao.Notice;
+import com.spring.web.dao.NoticesDAO;
+@Service("noticesService")
+public class NoticesService {
+	private NoticesDAO noticesDAO;
+	@Autowired
+	public void setNoticesDAO(NoticesDAO noticesDAO) {
+		this.noticesDAO = noticesDAO;
+	}
+	public List<Notice> getCurrent(){
+		return noticesDAO.getNotices();
+	}
+	//create method for insert value 
+	public void create(Notice notice) {
+		noticesDAO.create(notice);
+	}	
+
+	// error handle test method
+	public void throwTextException() {
+		noticesDAO.getNotice(132332);
+	}
+}
+```
+
+
+
+### UsersService.java
+
+```java
+package com.spring.web.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.spring.web.dao.User;
+import com.spring.web.dao.UserDao;
+@Service("usersService")
+public class UsersService {
+	private UserDao userDao;
+	@Autowired
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+	public void create(User user) {
+		userDao.create(user);	
+	}
+	public boolean exists(String username) {
+		return userDao.exists(username);
+	}
+}
+```
+
+
+### ValidEmail.java
+
+#### under com.spring.web.validation package
+
+```java
+package com.spring.web.validation;
+
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import javax.validation.Constraint;
+import javax.validation.Payload;
+
+@Target({ METHOD, FIELD, ANNOTATION_TYPE})
+@Retention(RUNTIME)
+@Documented
+@Constraint(validatedBy = {com.spring.web.validation.ValidEmailImpl.class })
+public @interface ValidEmail {
+
+	String message() default "Does not seem to be a valid email address";
+
+	Class<?>[] groups() default { };
+
+	Class<? extends Payload>[] payload() default { };
+
+	int min() default 5;
+
+}
+
+```
+### ValidEmailImpl.java
+
+```java
+package com.spring.web.validation;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+
+import org.apache.commons.validator.routines.EmailValidator;
+
+public class ValidEmailImpl implements ConstraintValidator<ValidEmail,String>{
+	int min ;
+	@Override
+	public void initialize(ValidEmail constraintAnnotation) {
+		min = constraintAnnotation.min();	
+	}
+
+	@Override
+	public boolean isValid(String email, ConstraintValidatorContext context) {
+		if (email.length() < min) {
+			return false;
+		}
+		if (!EmailValidator.getInstance(false).isValid(email)) {
+			return false;
+		}
+		return true;
+	}
+}
+```
+
+# package com.spring.web.message
+
+## Message.properties
+
+```properties
+	Size.user.username = User Name must be between 4 to 15 long.....
+	ValidEmail.user.email= this does not seems valid email
+```
+
+
+### home.jsp
+
+```java
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!--JSTL prifix added-->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!--Sql prefix added-->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Insert title here</title>
+	</head>
+	<body>
+<a href="${pageContext.request.contextPath}/notices">Show Current notices</a><br><!--for appropriate path
+read context path from page context-->
+<a href="${pageContext.request.contextPath}/createnotice">Create notices</a>
+	</body>
+</html>
+```
+
+
+### createnotice.jsp
+
+```java
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+    
+    <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+<link href="${pageContext.request.contextPath}/static/lib/bootstrap/css/bootstrap.css" rel='stylesheet' type="text/css" />
+</head>
+<body>
+<!-- post মেথড হলে url এ parameter দেখা যাবে না  -->
+
+ <div class="col-md-6 col-md-offset-3">
+<sf:form class="form-horizontal"   method="post" action="${pageContext.request.contextPath}/docreate" commandName="notice">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Create Notice</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="name">Name :</label>  
+  <div class="col-md-4">
+  <!-- Path must be equal to input name -->
+  <sf:input id="name" path="name" name="name"  type="text" placeholder="Enter your name" class="form-control input-md"/>
+    <!-- Show error message into view -->
+    <sf:errors path="name" cssClass="alert-danger"></sf:errors>
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="email">Email :</label>  
+  <div class="col-md-4">
+  <sf:input id="email" name="email" path="email" type="text" placeholder="Enter your email" class="form-control input-md"/>
+    <!-- Show error message into view -->
+    <sf:errors path="email" cssClass="alert-danger"></sf:errors>    
+  </div>
+</div>
+
+<!-- Textarea -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="text">Notice :</label>
+  <div class="col-md-4">                     
+    <sf:textarea class="form-control" path="text" id="text" name="text" ></sf:textarea>
+     <!-- Show error message into view -->
+    <sf:errors path="text" cssClass="alert-danger"></sf:errors>   
+    
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="submit"></label>
+  <div class="col-md-4">
+    <button id="submit" name="submit" class="btn btn-primary">Create Notice</button>
+  </div>
+</div>
+
+</fieldset>
+</sf:form>
+</div>
+
+</div>
+</body>
+</html>
+```
+
+### notices.jsp
+
+```java
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<!--bootstrup added-->
+<link href="${pageContext.request.contextPath}/static/lib/bootstrap/css/bootstrap.css" rel='stylesheet' type="text/css" />
+</head>
+<body>
+<!--Show value tablewise-->
+<table class="table table-striped">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Notice</th>
+    </tr>
+<c:forEach var="notice" items="${notices}">
+    <tr>
+      <td><c:out value="${notice.id}"></c:out></td>
+      <td><c:out value="${notice.name}"></c:out></td>
+      <td><c:out value="${notice.email}"></c:out></td>
+      <td><c:out value="${notice.text}"></c:out></td>
+    </tr>
+</c:forEach>
+</table>
+</body>
+</html>
+```
+
+### noticecreated.jsp
+
+```java
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>notice created</h1>
+</body>
+</html>
+```
+
+### login.jsp
+
+```java
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!--Added C namespace-->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<title>Login Page</title>
+<link
+	href="${pageContext.request.contextPath}/static/lib/bootstrap/css/bootstrap.css"
+	rel='stylesheet' type="text/css" />
+</head>
+<body onload='document.f.j_username.focus();'>
+	<h3>Login with Username and Password</h3>
+	<div class="col-md-6 col-md-offset-3">
+		<form class="form-horizontal"
+			action='${pageContext.request.contextPath}/j_spring_security_check'
+			method='POST'>
+			<fieldset>
+				<!-- Form Name -->
+				<legend>Login</legend>
+				<!-- Text input-->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="j_username">Username
+						:</label>
+					<div class="col-md-4">
+						<input id="j_username" name="j_username" type="text"
+							placeholder="" class="form-control input-md">
+					</div>
+				</div>
+				<!-- Password input-->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="j_password">Password
+						:</label>
+					<div class="col-md-4">
+						<input id="j_password" name="j_password" type="password"
+							placeholder="" class="form-control input-md">
+					</div>
+				</div>
+				<!--Username password incorrect alart-->
+				</div>
+				<div class="alert-danger">
+					<c:if test="${param.error != null }">
+						incorrect username or password
+					</c:if>
+				</div>				
+				<!-- Button -->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="submit"></label>
+					<div class="col-md-4">
+						<button id="submit" name="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+		<!--Account create link added-->
+		<p><a href="<c:url value='/newaccount'/>">create new Account</a> </p>		
+	</div>
+</body>
+</html>
+```
+
+
+
+### newaccount.jsp
+
+```java
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+<link
+	href="${pageContext.request.contextPath}/static/lib/bootstrap/css/bootstrap.css"
+	rel='stylesheet' type="text/css" />
+</head>
+<body>
+	<!-- post মেথড হলে url এ parameter দেখা যাবে না  -->
+	<div class="col-md-6 col-md-offset-3">
+		<sf:form class="form-horizontal" method="post"
+			action="${pageContext.request.contextPath}/createaccount"
+			commandName="user">
+			<fieldset>
+				<!-- Form Name -->
+				<legend>Create User</legend>
+				<!-- Text input-->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="username">Username
+						: </label>
+					<div class="col-md-4">
+						<!-- Path must be equal to input name -->
+						<sf:input id="username" path="username" name="username"
+							type="text" placeholder="Enter your username"
+							class="form-control input-md" />
+						<!-- Show error message into view -->
+						<sf:errors path="username" cssClass="alert-danger"></sf:errors>
+					</div>
+				</div>
+				<!-- email input-->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="email">Email :</label>
+					<div class="col-md-4">
+						<sf:input id="email" name="email" path="email" type="text"
+							placeholder="Enter your email" class="form-control input-md" />
+						<!-- Show error message into view -->
+						<sf:errors path="email" cssClass="alert-danger"></sf:errors>
+					</div>
+				</div>
+				<!-- Password input-->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="password">Password
+						:</label>
+					<div class="col-md-4">
+						<sf:input id="password" name="password" path="password"
+							type="text" class="form-control input-md" />
+						<sf:errors path="password" cssClass="alert-danger"></sf:errors>
+					</div>
+				</div>
+				<!--Conform Password input-->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="confirmpassword">Confirm
+						Password :</label>
+					<div class="col-md-4">
+						<input id="confirmpassword" name="confirmpassword" type="text"
+							class="form-control input-md" />
+					</div>
+				</div>
+				<!-- Button -->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="submit"></label>
+					<div class="col-md-4">
+						<button id="submit" name="submit" class="btn btn-primary">Create
+							User</button>
+					</div>
+				</div>
+			</fieldset>
+		</sf:form>
+	</div>
+</body>
+</html>
+```
+
+### accountcreated.jsp
+
+```java
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+Your account has been created.......
+</body>
+</html>
+```
+
+
+
+
+### service-context.xml
+
+#### Under com.spring.web.config Package
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.web.service"></context:component-scan>
+</beans>
+
+```
+
+### dao-context.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+	<context:annotation-config></context:annotation-config>
+	<context:component-scan base-package="com.spring.web.dao"></context:component-scan>
+	<!--dataSource bean is created-->
+	<jee:jndi-lookup jndi-name="jdbc/spring" id="dataSource"
+		expected-type="javax.sql.DataSource">
+	</jee:jndi-lookup>
+</beans>
+
+```
+
+
+### notices-servlet.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+	<context:component-scan base-package="com.spring.controller"></context:component-scan>
+	<mvc:annotation-driven></mvc:annotation-driven>
+
+	<!--Internal Resource View Resolver-->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		id="jspViewResolver">
+	<property name="prefix" value="/WEB-INF/jsps/"></property>
+	<property name="suffix" value=".jsp"></property>
+	</bean>	
+
+	<!--Enable bootstrap-->
+
+
+		<mvc:resources location="/resources/" mapping="/static/**" />
+
+	<!--linking with message properties....-->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+	<property name="basename" value="com.spring.web.message.message">
+	</property>
+	</bean>
+
+</beans>
+
+```
+
+### security-context.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="abdullah" authorities="admin"
+					password="123" />
+				<security:user name="abida" authorities="admin"
+					password="123" />
+			</security:user-service>
+		</security:authentication-provider>
+
+		<!--added new authontication provider where reference datasource = dataSource -->
+		<security:authentication-provider>
+			<security:jdbc-user-service data-source-ref="dataSource" />
+		</security:authentication-provider>
+
+	</security:authentication-manager>
+	
+	<security:http use-expressions="true">
+		<security:form-login />
+		<!--change default spring login path-->
+		<security:form-login login-page="/login"
+			authentication-failure-url="/login?error=true" />
+		<security:intercept-url pattern="/" access="permitAll" />
+		<security:intercept-url pattern="/notices" access="permitAll" />
+		<!--Permit all static resources like bootstrup library and so one...-->
+		<security:intercept-url pattern="/static/**" access="permitAll" />
+		<!--Give login url permission-->
+		<security:intercept-url pattern="/login" access="permitAll" />
+
+		<security:intercept-url pattern="/newaccount" access="permitAll" />
+		<security:intercept-url pattern="/createaccount" access="permitAll" />
+		<security:intercept-url pattern="/accountcreated" access="permitAll" />
+
+		<security:intercept-url pattern="/createnotice" access="isAuthenticated()" />
+		<security:intercept-url pattern="/docreate" access="isAuthenticated()" />
+		<security:intercept-url pattern="/**" access="denyAll" />
+	</security:http>
+</beans>
+```
+
+### web.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>springtutorial48</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>notices</display-name>
+    <servlet-name>notices</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>notices</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+     <description>Spring Test App</description>
+  <resource-ref>
+      <description>DB Connection</description>
+      <res-ref-name>jdbc/spring</res-ref-name>
+      <res-type>javax.sql.DataSource</res-type>
+      <res-auth>Container</res-auth>
+  </resource-ref> 
+<!--listener added-->
+  <listener>
+  <listener-class>org.springframework.web.context.ContextLoaderListener
+	</listener-class>
+  </listener>
+
+  	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:com/spring/web/config/dao-context.xml
+			classpath:com/spring/web/config/service-context.xml
+			classpath:com/spring/web/config/security-context.xml
+
+		</param-value>
+	</context-param>
+
+ <!-- Wiring TestFilter -->
+ <!--
+ <filter>
+ <display-name>TestFilter</display-name>
+ <filter-name>TestFilter</filter-name>
+ <filter-class>com.spring.web.filter.TestFilter</filter-class>
+ </filter> 
+ 
+ <filter-mapping>
+ <filter-name>TestFilter</filter-name>
+ <url-pattern>/*</url-pattern>
+ </filter-mapping>
+-->
+  <!-- Spring security filter is added -->
+  <filter>
+    <display-name>springSecurityFilterChain</display-name>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+
+</web-app>
+```

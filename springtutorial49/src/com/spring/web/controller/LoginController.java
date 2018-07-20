@@ -50,12 +50,12 @@ public class LoginController {
 			return "newaccount";
 		}
 		
-		try {
-			usersService.create(user);
-		}catch(DuplicateKeyException e) {
-			result.rejectValue("username", "DuplicateKey.user.username", "this username already exist");
-			return "newaccount";
-		}
+//		try {
+//			usersService.create(user);
+//		}catch(DuplicateKeyException e) {
+//			result.rejectValue("username", "DuplicateKey.user.username", "this username already exist");
+//			return "newaccount";
+//		}
 		
 		
 		
