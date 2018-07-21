@@ -33,6 +33,11 @@ public class LoginController {
 	public String showLoggedOut() {
 		return "loggedout";
 	}
+
+	@RequestMapping("/denied")
+	public String accessDenied() {
+		return "denied";
+	}
 	
 	@RequestMapping("/newaccount")
 	public String showNewAccount(Model model) {
