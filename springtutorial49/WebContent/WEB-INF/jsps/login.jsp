@@ -50,6 +50,16 @@
 						incorrect username or password
 					</c:if>
 				</div>
+				
+				
+				<!-- Checkbox input-->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="j_password">Remember me
+						:</label>
+						<input id="_spring_security_remember_me" name="_spring_security_remember_me" type="checkbox" checked="checked">
+				</div>
+
+				
 				<!-- Button -->
 				<div class="form-group">
 					<label class="col-md-4 control-label" for="submit"></label>
