@@ -11,7 +11,6 @@
 
 > sudo apt-get install maven
 
-> mvn
 
 ### Download Maven documents form IDE
 
@@ -42,7 +41,7 @@
 
 
 - [Awesome Java](#awesome-java)
-    - [Lacture_11_part_1](#Lacture_11_part_1)
+    - [# Lacture 8](##-Lacture-8)
     - [Bean Mapping](#bean-mapping)
     - [Build](#build)
 
