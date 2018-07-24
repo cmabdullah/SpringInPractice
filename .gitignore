@@ -1,7 +1,10 @@
 /RemoteSystemsTempFiles/
 /Servers/
-/springtutorial49/target/
+/springtutorial49/target/*
 /springtutorial48/target/
+/springtutorial49/target/classes/
+/springtutorial49/target/m2e-wtp/
+/springtutorial49/target/m2e-wtp/web-resources/
 *.db
 *.swp
 *.exe

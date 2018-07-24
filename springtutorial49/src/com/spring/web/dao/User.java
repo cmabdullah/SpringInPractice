@@ -63,5 +63,9 @@ public class User {
 	public void setAuthority(String authority) {
 		this.authority = authority;
 	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
 
 }
