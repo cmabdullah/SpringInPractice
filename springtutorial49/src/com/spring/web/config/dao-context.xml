@@ -15,12 +15,12 @@
 		expected-type="javax.sql.DataSource">
 	</jee:jndi-lookup>
 
-
+<beans profile="production">
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	<tx:annotation-driven />
-
+</beans>
 
 </beans>

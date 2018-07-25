@@ -11,7 +11,5 @@ public class HomeController {
 		logger.info("Showing home.....");
 		return "home";
 	}
-	
-	
-	
+
 }
