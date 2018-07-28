@@ -1,0 +1,1 @@
+### Resources.md is the main practice copy, this file is too learge, thats why i devided it into many sub file, which is available in documentation folder. If any further chaange is needed that time Resources.md never be change. I will update documentation resources.
