@@ -26,8 +26,8 @@ public class App {
 package com.cma.spring.exceptiontest;
 
 public class Parrot {
-	private String id = "123";
-	private String speech ="Hi cm" ;
+	private String id ;
+	private String speech ;
 
 	public void setId(String id) {
 		this.id = id;
