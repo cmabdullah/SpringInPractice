@@ -534,10 +534,11 @@ public ModelAndView showHome() {// old schoolway
 
 
 1. context.xml (Tomcat server)
-	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
-	maxActive="100" maxIdle="30" maxWait="10000"
-	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://localhost:3306/springtutorial"/>
+
+    	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
+    	maxActive="100" maxIdle="30" maxWait="10000"
+    	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
+    	url="jdbc:mysql://localhost:3306/springtutorial"/>
 
 ```java
 package com.spring.controller;
@@ -667,10 +668,11 @@ public ModelAndView showHome() {// old schoolway
 
 
 1. context.xml (Tomcat server)
-	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
-	maxActive="100" maxIdle="30" maxWait="10000"
-	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://localhost:3306/springtutorial"/>
+
+    	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
+    	maxActive="100" maxIdle="30" maxWait="10000"
+    	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
+    	url="jdbc:mysql://localhost:3306/springtutorial"/>
 
 ### NoticeController.java
 
@@ -974,10 +976,10 @@ public class NoticesDAO {
 
 1. context.xml (Tomcat server)
 
-	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
-	maxActive="100" maxIdle="30" maxWait="10000"
-	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://localhost:3306/springtutorial"/>
+    	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
+    	maxActive="100" maxIdle="30" maxWait="10000"
+    	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
+    	url="jdbc:mysql://localhost:3306/springtutorial"/>
 
 ### NoticeController.java
 
@@ -1284,10 +1286,10 @@ public class NoticesDAO {
 
 1. context.xml (Tomcat server)
 
-	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
-	maxActive="100" maxIdle="30" maxWait="10000"
-	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://localhost:3306/springtutorial"/>
+    	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
+    	maxActive="100" maxIdle="30" maxWait="10000"
+    	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
+    	url="jdbc:mysql://localhost:3306/springtutorial"/>
 
 ### NoticeController.java
 
@@ -1644,10 +1646,10 @@ public class NoticesService {
 
 1. context.xml (Tomcat server)
 
-	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
-	maxActive="100" maxIdle="30" maxWait="10000"
-	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://localhost:3306/springtutorial"/>
+    	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
+    	maxActive="100" maxIdle="30" maxWait="10000"
+    	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
+    	url="jdbc:mysql://localhost:3306/springtutorial"/>
 
 
 ### HomeController.java
@@ -2065,10 +2067,10 @@ read context path from page context-->
 
 1. context.xml (Tomcat server)
 
-	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
-	maxActive="100" maxIdle="30" maxWait="10000"
-	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://localhost:3306/springtutorial"/>
+    	<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
+    	maxActive="100" maxIdle="30" maxWait="10000"
+    	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
+    	url="jdbc:mysql://localhost:3306/springtutorial"/>
 
 
 ### HomeController.java
