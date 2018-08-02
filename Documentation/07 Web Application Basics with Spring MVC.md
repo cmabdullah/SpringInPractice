@@ -530,8 +530,6 @@ public ModelAndView showHome() {// old schoolway
 
 # Lacture 56
 ## Objective : Configuring a JNDI DataSource
-### NoticeController.java
-
 
 1. context.xml (Tomcat server)
 
@@ -539,6 +537,8 @@ public ModelAndView showHome() {// old schoolway
     	maxActive="100" maxIdle="30" maxWait="10000"
     	username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
     	url="jdbc:mysql://localhost:3306/springtutorial"/>
+
+### NoticeController.java
 
 ```java
 package com.spring.controller;

@@ -1397,8 +1397,7 @@ read context path from page context-->
 		username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
 		url="jdbc:mysql://localhost:3306/springtutorial"/>
 
-
-
+# Dependencies 
 
 	  	<dependency>
 	  		<groupId>org.hibernate</groupId>
@@ -1492,7 +1491,7 @@ public class NoticeController {// Smart way
 	@RequestMapping(value = "/docreate", method=RequestMethod.POST)
 	public String doCreate(Model model,@Valid Notice notice, BindingResult result) {
 		System.out.println(notice);
-		
+		//Check form validation
 		if (result.hasErrors()) {
 			List<ObjectError> errors = result.getAllErrors();
 			for (ObjectError error: errors) {
@@ -1937,25 +1936,17 @@ read context path from page context-->
 </web-app>
 ```
 
-
-
-
-
-
 # Lacture 68
 ## Objective : More Form Validation Support
 
-
 1. context.xml (Tomcat server)
-
 
 		<Resource name="jdbc/spring" auth="Container" type="javax.sql.DataSource"
 		maxActive="100" maxIdle="30" maxWait="10000"
 		username="root" password="rootcm" driverClassName="com.mysql.jdbc.Driver"
 		url="jdbc:mysql://localhost:3306/springtutorial"/>
 
-
-
+# Dependencies
 
 	  	<dependency>
 	  		<groupId>org.hibernate</groupId>
@@ -2814,9 +2805,8 @@ read context path from page context-->
 ```java
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-    
-    <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
+<!--Spring form taglib-->
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -2829,6 +2819,7 @@ read context path from page context-->
 <!-- post মেথড হলে url এ parameter দেখা যাবে না  -->
 
  <div class="col-md-6 col-md-offset-3">
+ 	<!--commandName is beans name-->
 <sf:form class="form-horizontal"   method="post" action="${pageContext.request.contextPath}/docreate" commandName="notice">
 <fieldset>
 
@@ -2839,7 +2830,7 @@ read context path from page context-->
 <div class="form-group">
   <label class="col-md-4 control-label" for="name">Name :</label>  
   <div class="col-md-4">
-  <!-- Path must be equal to input name -->
+  <!-- Path must be equal to input name , this is the attribute of sf tag-->
   <sf:input id="name" path="name" name="name"  type="text" placeholder="Enter your name" class="form-control input-md"/>
     <!-- Show error message into view -->
     <sf:errors path="name" cssClass="alert-danger"></sf:errors>
