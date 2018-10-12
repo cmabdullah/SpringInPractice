@@ -336,15 +336,15 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class Logger {
-	//@Pointcut("execution( void com.spring.aop.Camera.snap(..))")
-	//@Pointcut("execution( *  com.spring.aop.Camera.snap(..))")
-	//@Pointcut("execution( *  com.spring.aop.Camera.*(..))")
+	//@Pointcut("execution( void com.spring.aop.Camera.snap(..))")// this pointcut will execute for all snap methid with different parameter.......
+	//@Pointcut("execution( *  com.spring.aop.Camera.snap(..))")// wildcut all snap method type....
+	//@Pointcut("execution( *  com.spring.aop.Camera.*(..))")// this execution joinpoint will axecute for all method inside Camera class....
 	@Pointcut("execution( *  com.spring.aop.Camera.*(..))")
-	//@Pointcut("execution( *  *.*(..))")
+	//@Pointcut("execution( *  *.*(..))")//this join point will execute for all classes....... methods...
 	public void cameraSnap() {
 		
 	}
-	@Pointcut("execution( *  *.*(..))")
+	@Pointcut("execution( *  *.*(..))")//this pointcut will execute for all package ,all classes, allmethodes....
 	public void cameraActivity() {
 		
 	}
