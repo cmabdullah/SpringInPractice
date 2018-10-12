@@ -1,0 +1,108 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| StreetRockers      |
+| cm                 |
+| information_schema |
+| mydb               |
+| mysql              |
+| performance_schema |
+| springtest         |
+| springtutorial     |
+| sys                |
++--------------------+
+9 rows in set (0.01 sec)
+
+mysql> use springtutorial 
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables
+    -> ;
++--------------------------+
+| Tables_in_springtutorial |
++--------------------------+
+| authorities              |
+| notices                  |
+| users                    |
++--------------------------+
+3 rows in set (0.01 sec)
+
+mysql> select * from users
+    -> ?
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?' at line 2
+mysql> select * from users ;
++-------------+----------------------------------------------------------------------------------+---------+-----------------------+
+| username    | password                                                                         | enabled | email                 |
++-------------+----------------------------------------------------------------------------------+---------+-----------------------+
+| abiabdullah | 5b18c03429de1c6ad389b70e7f37d18f8a29a7e5f6900c3a36f0e070d311090814d7864a853c0f88 |       1 | abdullah@gmail.com    |
+| cmabdullah  | c47bf45d24f5ad09356b2d34554082e5f38ac443b501d0eee2891b919a67234ad92199eb355e4647 |       1 | a.kium.khan@gmail.com |
+| mainul      | d03997088f768d173ec03c44e9d2264975bcae8afed6e372b81dd60708f7be497ca0ecf4317b4340 |       1 | mainul@gmail.com      |
++-------------+----------------------------------------------------------------------------------+---------+-----------------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from authorities;
++-------------+------------+
+| username    | authority  |
++-------------+------------+
+| abiabdullah | ROLE_USER  |
+| cmabdullah  | ROLE_ADMIN |
+| mainul      | ROLE_USER  |
++-------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from notices ;
++----+---------------------+-----------------------+------------------------------------+
+| id | name                | email                 | text                               |
++----+---------------------+-----------------------+------------------------------------+
+| 44 | C. M. Abdullah Khan | a.kium.khan@gmail.com | a.kium.khan@gmail.coma.kium.khan   |
+| 45 | C. M. Abdullah Khan | a.kium.khan@gmail.com | hi cm how are youhi cm how are you |
++----+---------------------+-----------------------+------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> desc notices ;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(45) | YES  |     | NULL    |                |
+| email | varchar(45) | YES  |     | NULL    |                |
+| text  | varchar(45) | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> desc users;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| username | varchar(100) | NO   | PRI | NULL    |       |
+| password | varchar(100) | YES  |     | NULL    |       |
+| enabled  | tinyint(4)   | YES  |     | 1       |       |
+| email    | varchar(85)  | NO   |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc authorities;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| username  | varchar(100) | NO   | PRI | NULL    |       |
+| authority | varchar(100) | YES  |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> desc notices;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(45) | YES  |     | NULL    |                |
+| email | varchar(45) | YES  |     | NULL    |                |
+| text  | varchar(45) | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> 
