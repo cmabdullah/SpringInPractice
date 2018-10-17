@@ -7,12 +7,12 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import com.spring.web.dao.Notice;
-import com.spring.web.dao.NoticesDAO;
+import com.spring.web.dao.NoticesDao;
 @Service("noticesService")
 public class NoticesService {
-	private NoticesDAO noticesDAO;
+	private NoticesDao noticesDAO;
 	@Autowired
-	public void setNoticesDAO(NoticesDAO noticesDAO) {
+	public void setNoticesDAO(NoticesDao noticesDAO) {
 		this.noticesDAO = noticesDAO;
 	}
 	public List<Notice> getCurrent(){

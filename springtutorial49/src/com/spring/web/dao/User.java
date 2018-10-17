@@ -19,6 +19,9 @@ public class User {
 	
 	@ValidEmail
 	private String email;
+	
+	private String name;
+	
 	private boolean enabled;
 	private String authority;
 	
@@ -26,8 +29,9 @@ public class User {
 		
 	}
 
-	public User(String username, String password, String email, boolean enabled, String authority) {
+	public User(String username,String name, String password, String email, boolean enabled, String authority) {
 		this.username = username;
+		this.name = name;
 		this.password = password;
 		this.email = email;
 		this.enabled = enabled;
@@ -67,6 +71,16 @@ public class User {
 	public boolean isEnabled() {
 		return enabled;
 	}
+	
+	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	@Override
 	public int hashCode() {
@@ -75,7 +89,7 @@ public class User {
 		result = prime * result + ((authority == null) ? 0 : authority.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + (enabled ? 1231 : 1237);
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -101,10 +115,10 @@ public class User {
 			return false;
 		if (enabled != other.enabled)
 			return false;
-		if (password == null) {
-			if (other.password != null)
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!password.equals(other.password))
+		} else if (!name.equals(other.name))
 			return false;
 		if (username == null) {
 			if (other.username != null)
@@ -113,5 +127,13 @@ public class User {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "User [username=" + username + ", email=" + email + ", name=" + name + ", enabled=" + enabled
+				+ ", authority=" + authority + "]";
+	}
+
+
 
 }

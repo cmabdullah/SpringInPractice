@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 @Component("noticesDAO")
-public class NoticesDAO {
+public class NoticesDao {
 	private NamedParameterJdbcTemplate jdbc;
 //	public NoticesDAO() {//constructor added for debugg purposes
 //		System.out.println("Beans are configured");
@@ -28,13 +28,19 @@ public class NoticesDAO {
 	}
 	public List<Notice> getNotices(){
 		
-		return jdbc.query("select * from notices", new RowMapper<Notice>() {
+		return jdbc.query("select * from notices, users where notices.username=users.username and users.enabled=true", new RowMapper<Notice>() {
 			public Notice mapRow(ResultSet rs, int rowNum) throws SQLException {
+				User user = new User();
+				user.setAuthority(rs.getString("authority"));
+				user.setEmail(rs.getString("email"));
+				user.setEnabled(true);
+				user.setName(rs.getString("name"));
+				user.setUsername(rs.getString("username"));
+
 				Notice notice = new Notice();
 				notice.setId(rs.getInt("id"));
-				notice.setName(rs.getString("name"));
-				notice.setEmail(rs.getString("email"));
 				notice.setText(rs.getString("text"));
+				notice.setUser(user);
 				return notice;
 			}
 		});
@@ -49,17 +55,17 @@ public class NoticesDAO {
 	@Transactional
 	public int[] create(List<Notice> notices) {
 		SqlParameterSource[] params =  SqlParameterSourceUtils.createBatch(notices.toArray());
-		return jdbc.batchUpdate("insert into notices (id,name , email, text) values (:id,:name,:email,:text)", params);		
+		return jdbc.batchUpdate("insert into notices (username, text) values (:username,:text)", params);		
 	}
 
 	public boolean create(Notice notice) {
 		BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(notice);
-		return jdbc.update("insert into notices (name , email, text) values (:name,:email,:text)", params) == 1;
+		return jdbc.update("insert into notices (username, text) values (:username,:text)", params) == 1;
 	}
 	
 	public boolean update(Notice notice) {
 		BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(notice);
-		return jdbc.update("update notices set name=:name,email=:email,text=:text where id=:id", params) == 1;
+		return jdbc.update("update notices set text=:text where id=:id", params) == 1;
 	}
 	
 	public Notice getNotice(int id){
@@ -68,14 +74,22 @@ public class NoticesDAO {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("id", id);
 		//return jdbc.query("select * from notices where name = 'cm'", new RowMapper<Notice>() {
-		return jdbc.queryForObject("select * from notices where id = :id", params, new RowMapper<Notice>() {
+		return jdbc.queryForObject("select * from notices, users where notices.username=users.username and users.enabled=true and id = :id", params, new RowMapper<Notice>() {
 			public Notice mapRow(ResultSet rs, int rowNum) throws SQLException {
+				User user = new User();
+				user.setAuthority(rs.getString("authority"));
+				user.setEmail(rs.getString("email"));
+				user.setEnabled(true);
+				user.setName(rs.getString("name"));
+				user.setUsername(rs.getString("username"));
+
 				Notice notice = new Notice();
 				notice.setId(rs.getInt("id"));
-				notice.setName(rs.getString("name"));
-				notice.setEmail(rs.getString("email"));
 				notice.setText(rs.getString("text"));
+				notice.setUser(user);
 				return notice;// return single object
+				
+				
 			}
 		});
 	}

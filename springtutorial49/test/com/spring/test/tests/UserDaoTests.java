@@ -42,7 +42,12 @@ public class UserDaoTests {
 	public void testCreateUser() {
 		//assertEquals("Dummy test", 1, 1);
 		
-		User user = new User("abiabdullah", "123456789", "cm@gmail.com",true, "ROLE_USER");
+		//User user = new User("abiabdullah", "123456789", "cm@gmail.com",true, "ROLE_USER");
+		
+		User user = new User("abiabdullah", "abdullah Khan", "123456789", "cm@gmail.com ", true,
+				"ROLE_USER");
+		
+		
 		assertTrue("User create should be return true",userDao.create(user));
 		
 		List<User> users = userDao.getAllUsers(); 
@@ -51,6 +56,8 @@ public class UserDaoTests {
 		assertTrue("User should exist ", userDao.exists(user.getUsername()));
 		
 		assertEquals("Create user should be identicle to retrive user", user, users.get(0));
+		
+		
 		
 	}
 }
