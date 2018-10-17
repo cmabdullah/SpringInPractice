@@ -1099,8 +1099,10 @@ public class App {
     	try {
     		//insert notice
     		
-    		Notice notice1 = new Notice("Abdullah", "cm@gmail.com", "hi Cm How are you?");
+    		//Notice notice1 = new Notice("Abdullah", "cm@gmail.com", "hi Cm How are you?");
     		//noticesDAO.create(notice1);
+
+    		Notice notice1 = new Notice(2,"Abi Abdullah Khan", "abiabdullah@gmail.com", "welcome abi abdullah"); //seems fixed bug from Id
     		noticesDAO.update(notice1); //update notice
     		
     		
